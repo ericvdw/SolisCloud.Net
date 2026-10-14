@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/SolisCloud.Cli/SolisCloud.Cli.csproj" />
     <Project Path="src/SolisCloud.Client/SolisCloud.Client.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/SolisCloud.Cli.Tests/SolisCloud.Cli.Tests.csproj" />
     <Project Path="tests/SolisCloud.Client.Tests/SolisCloud.Client.Tests.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">

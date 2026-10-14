@@ -22,13 +22,42 @@ Early development. The public API will change until 1.0.
 Log in to SolisCloud and go to **Account → Basic Settings → API Management**. API access may first need to be enabled by Solis support.
 Never commit your API ID or secret.
 
+## The `solis` command-line tool
+
+The CLI reads credentials from environment variables, never from the command line (which would leave them in shell history):
+
+```powershell
+$env:SOLIS_API_ID = "your API ID"
+$env:SOLIS_API_SECRET = "your API secret"
+# Optional: $env:SOLIS_BASE_ADDRESS = "https://www.soliscloud.com:13333/"
+```
+
+Run it from the repository with `dotnet run --project src/SolisCloud.Cli --`, followed by one of these commands:
+
+| Command | What it does |
+|---|---|
+| `whoami` | Checks the credentials and the computer's clock (requests fail beyond ±15 minutes) and lists the stations the account can see. |
+| `raw <operation> [--body <json>] [--envelope]` | Sends any operation, e.g. `raw inverterDetail --body '{"sn":"..."}'`, and prints the response. Operations that change account data also need `--allow-write`. |
+| `capture [--output <folder>] [--date yyyy-MM-dd] [--no-sanitize]` | Calls every read operation for everything the account can see and saves each request and response under `captures/<timestamp>/`. |
+
+### Sharing captures
+
+The API document doesn't fully describe what the API returns, and responses differ between inverter models. Captures from real systems are how this library's models get written and tested, so they're the most useful contribution you can make.
+
+`capture` sanitises by default:
+- IDs and serial numbers become consistent fakes of the same shape, so an inverter's `stationId` still matches its station.
+- Names, addresses, contact details and URLs become `REDACTED`.
+- Coordinates become `0`.
+
+Sanitising is best-effort, so **read the files before sharing them**. `captures/` is in `.gitignore`.
+
 ## Repository layout
 
 | Path | What |
 |------|------|
 | `src/SolisCloud.Client` | The library (NuGet package). |
 | `src/SolisCloud.Cli` | `solis` command-line tool for checking credentials and capturing sanitised responses. |
-| `tests/` | Unit tests and recorded fixtures. |
+| `tests/` | Unit tests for both, and recorded fixtures. |
 | `docs/` | Design notes, API quirks, and the analyzer guide. |
 
 ## Building
