@@ -11,6 +11,7 @@ internal static class FieldRules
     private static readonly HashSet<string> IdentifierNames = new(StringComparer.OrdinalIgnoreCase)
     {
         "id", "ids", "sn", "sno", "snList", "idList", "stationIds", "nmiCode", "orgCode", "refId",
+        "iccid", "imei", "imsi", "mac",
 
         // Location codes: harmless alone, but together they pinpoint a suburb.
         "city", "region", "county", "street", "zipCode", "postCode", "postalCode",
@@ -24,14 +25,21 @@ internal static class FieldRules
 
     private static readonly HashSet<string> PersonalTextNames = new(StringComparer.OrdinalIgnoreCase)
     {
-        "addr", "address", "account", "owner", "installer", "contact", "tel",
+        "account", "owner", "installer", "contact", "tel", "tag",
+
+        // Free text that names the area, e.g. "… City of Ekurhuleni Metropolitan Municipality Clouds".
+        "weather",
         "cityStr", "regionStr", "countyStr", "streetStr", "provinceStr",
     };
 
+    // Device addresses on a bus, not street addresses.
     private static readonly HashSet<string> NotPersonalText = new(StringComparer.OrdinalIgnoreCase)
     {
-        "timeZoneName", "countryShortName", "nationalStandardsName",
+        "rs485ComAddr", "parallelAddr", "modbusAddr",
     };
+
+    // Names of types, models and settings ("batteryTypeName", "timeZoneName") describe hardware or configuration.
+    private static readonly string[] TechnicalKeywords = ["type", "model", "version", "standard", "timeZone", "country"];
 
     private static readonly string[] PersonalTextKeywords = ["phone", "mobile", "mail"];
 
@@ -65,7 +73,7 @@ internal static class FieldRules
             return true;
         }
 
-        if (NotIdentifiers.Contains(name))
+        if (NotIdentifiers.Contains(name) || name.StartsWith("timeZone", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
@@ -85,6 +93,17 @@ internal static class FieldRules
             return false;
         }
 
+        // Any address: "addr", "addrOrigin" (the street as typed), "buildAddr" (the full postal address).
+        if (name.Contains("addr", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (name.EndsWith("Name", StringComparison.Ordinal) && ContainsAny(name, TechnicalKeywords))
+        {
+            return false;
+        }
+
         // Includes "remark1".."remark3", "pic1Url" and the like, which the document lists for stations.
         if (PersonalTextNames.Contains(name)
             || name.Equals("name", StringComparison.OrdinalIgnoreCase)
@@ -95,7 +114,12 @@ internal static class FieldRules
             return true;
         }
 
-        foreach (string keyword in PersonalTextKeywords)
+        return ContainsAny(name, PersonalTextKeywords);
+    }
+
+    private static bool ContainsAny(string name, string[] keywords)
+    {
+        foreach (string keyword in keywords)
         {
             if (name.Contains(keyword, StringComparison.OrdinalIgnoreCase))
             {

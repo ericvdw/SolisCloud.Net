@@ -44,11 +44,14 @@ public sealed class CaptureCommandTests
 
         foreach (string file in files)
         {
+            byte[] bytes = await File.ReadAllBytesAsync(file, TestContext.Current.CancellationToken);
+            Assert.False(bytes is [0xEF, 0xBB, 0xBF, ..], file + " starts with a byte-order mark.");
+
             string text = await File.ReadAllTextAsync(file, TestContext.Current.CancellationToken);
             using var document = JsonDocument.Parse(text);
             Assert.True(document.RootElement.TryGetProperty("request", out _), file);
 
-            foreach (string secret in new[] { SampleData.StationId, SampleData.StationName, SampleData.InverterSn, SampleData.CollectorSn, SampleData.Address })
+            foreach (string secret in new[] { SampleData.StationId, SampleData.StationName, SampleData.InverterSn, SampleData.CollectorSn, SampleData.Address, "Protea Street", "Stellenbosch" })
             {
                 Assert.DoesNotContain(secret, text, StringComparison.Ordinal);
             }
@@ -119,6 +122,7 @@ public sealed class CaptureCommandTests
         CliHarness harness = new();
         harness.Handler
             .Route(SolisEndpoints.StationList, RoutingHttpMessageHandler.Success(SampleData.StationList))
+            .Route(SolisEndpoints.StationDetail, RoutingHttpMessageHandler.Success(SampleData.StationDetail))
             .Route(SolisEndpoints.InverterList, RoutingHttpMessageHandler.Success(SampleData.InverterList))
             .Route(SolisEndpoints.CollectorList, RoutingHttpMessageHandler.Success(SampleData.CollectorList));
         return harness;
