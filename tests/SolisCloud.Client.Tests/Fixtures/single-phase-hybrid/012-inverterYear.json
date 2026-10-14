@@ -1,8 +1,8 @@
 {
   "operation": "/v1/api/inverterYear",
   "request": {
-    "id": "5541177510994085392",
-    "sn": "1666762972173069",
+    "id": "7501601124933059954",
+    "sn": "1243838603845561",
     "money": "ZAR",
     "year": "2026"
   },
@@ -12,8 +12,8 @@
     "msg": "success",
     "data": [
       {
-        "inverterId": "5541177510994085392",
-        "id": "3157738848124399972",
+        "inverterId": "7501601124933059954",
+        "id": "1646705935171082064",
         "money": 1599.150,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
@@ -61,8 +61,8 @@
         "totalAndSmartLoadEnergy": 425.50000
       },
       {
-        "inverterId": "5541177510994085392",
-        "id": "1981857181166620416",
+        "inverterId": "7501601124933059954",
+        "id": "8921615092595646995",
         "money": 1676.500,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
@@ -110,8 +110,8 @@
         "totalAndSmartLoadEnergy": 441.30000
       },
       {
-        "inverterId": "5541177510994085392",
-        "id": "8499852200000420451",
+        "inverterId": "7501601124933059954",
+        "id": "7316635328774422593",
         "money": 1717.800,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
@@ -159,8 +159,8 @@
         "totalAndSmartLoadEnergy": 519.20000
       },
       {
-        "inverterId": "5541177510994085392",
-        "id": "1742405992619636737",
+        "inverterId": "7501601124933059954",
+        "id": "8605775011283104519",
         "money": 1704.500,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
@@ -208,8 +208,8 @@
         "totalAndSmartLoadEnergy": 527.30000
       },
       {
-        "inverterId": "5541177510994085392",
-        "id": "1611118647725791185",
+        "inverterId": "7501601124933059954",
+        "id": "7885417376427493280",
         "money": 1815.100,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
@@ -257,8 +257,8 @@
         "totalAndSmartLoadEnergy": 479.70000
       },
       {
-        "inverterId": "5541177510994085392",
-        "id": "9279047300985740235",
+        "inverterId": "7501601124933059954",
+        "id": "6245250630055606070",
         "money": 1704.500,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
@@ -306,8 +306,8 @@
         "totalAndSmartLoadEnergy": 498.20000
       },
       {
-        "inverterId": "5541177510994085392",
-        "id": "4016308038705294310",
+        "inverterId": "7501601124933059954",
+        "id": "1048044812472347659",
         "money": 1869.000,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
@@ -355,8 +355,8 @@
         "totalAndSmartLoadEnergy": 500.80000
       },
       {
-        "inverterId": "5541177510994085392",
-        "id": "4265845385888948959",
+        "inverterId": "7501601124933059954",
+        "id": "7647929264261087053",
         "money": 1865.500,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
@@ -404,8 +404,8 @@
         "totalAndSmartLoadEnergy": 519.50000
       },
       {
-        "inverterId": "5541177510994085392",
-        "id": "6879814032330752925",
+        "inverterId": "7501601124933059954",
+        "id": "6863060973031522482",
         "money": 1792.700,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
@@ -453,32 +453,32 @@
         "totalAndSmartLoadEnergy": 527.50000
       },
       {
-        "inverterId": "5541177510994085392",
-        "id": "1572788283871077795",
-        "money": 953.400,
+        "inverterId": "7501601124933059954",
+        "id": "7512453604403122157",
+        "money": 955.150,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
-        "energy": 272.400,
+        "energy": 272.900,
         "energyStr": "kWh",
         "energyPec": "1",
         "epmLoadEnergy": 0.000,
-        "fullHour": 34.05,
+        "fullHour": 34.11,
         "date": 1790827200000,
         "dateStr": "2026-10",
         "timeZone": 2.00,
-        "batteryDischargeEnergy": 126.000,
+        "batteryDischargeEnergy": 128.000,
         "batteryChargeEnergy": 136.000,
-        "gridPurchasedEnergy": 5.870,
+        "gridPurchasedEnergy": 5.900,
         "gridPurchasedIncome": 0.000,
         "gridSellEnergy": 0.000,
         "gridSellIncome": 0.000,
-        "purchasedMinusSell": 5.870,
-        "homeLoadEnergy": 243.000,
+        "purchasedMinusSell": 5.900,
+        "homeLoadEnergy": 245.000,
         "homeGridEnergy": 62.700,
-        "backUpEnergy": 179.500,
-        "oneSelf": 136.400,
-        "consumeEnergy": 268.270,
-        "produceEnergy": 272.400,
+        "backUpEnergy": 181.100,
+        "oneSelf": 136.900,
+        "consumeEnergy": 270.800,
+        "produceEnergy": 272.900,
         "oneSelfPercent": 0.00000,
         "gridPurchasedPercent": 0.00000,
         "generatorPercent": 0.00000,
@@ -486,7 +486,7 @@
         "totalRKwh": 0,
         "directR": 0,
         "directRKwh": 0,
-        "invAcE": 231,
+        "invAcE": 233,
         "gridBatteryE": 1,
         "generatorEnergy": 0.000,
         "toGrid": 0,
@@ -496,12 +496,12 @@
         "isEnergyStorage": true,
         "isS5": 0,
         "acCoupledEnergy": 0,
-        "pvAndAcCoupledEnergy": 272.400,
+        "pvAndAcCoupledEnergy": 272.900,
         "showIncomeInfo": true,
         "errorFlag": 0,
-        "totalAndSmartLoadEnergy": 242.200
+        "totalAndSmartLoadEnergy": 243.800
       }
     ],
-    "traceId": "e90649vw8vw4656101039804587px044"
+    "traceId": "73l81319059h9v3hy3k38952dnc66788"
   }
 }

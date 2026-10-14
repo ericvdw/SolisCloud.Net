@@ -3,7 +3,7 @@
   "request": {
     "money": "ZAR",
     "timeZone": 2.00,
-    "id": "6426147095506735008"
+    "id": "5225445071986602902"
   },
   "response": {
     "success": true,
@@ -11,31 +11,31 @@
     "msg": "success",
     "data": [
       {
-        "id": "5060141880752249662",
-        "money": 16698.150,
+        "id": "8226317643559863750",
+        "money": 16699.900,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
-        "energy": 4770.900,
+        "energy": 4771.400,
         "energyStr": "kWh",
         "energyPec": "1",
         "epmLoadEnergy": 0.000,
-        "fullHour": 851.95,
+        "fullHour": 852.04,
         "dateStr": "2026",
         "year": 2026,
         "timeZone": 8,
-        "batteryDischargeEnergy": 2303.000,
+        "batteryDischargeEnergy": 2305.000,
         "batteryChargeEnergy": 2404.000,
-        "gridPurchasedEnergy": 520.120,
-        "gridPurchasedIncome": 1820.420,
+        "gridPurchasedEnergy": 520.150,
+        "gridPurchasedIncome": 1820.525,
         "gridSellEnergy": 0.000,
         "gridSellIncome": 0.000,
-        "purchasedMinusSell": 520.120,
-        "homeLoadEnergy": 5190.020,
-        "homeGridEnergy": 1764.720,
-        "backUpEnergy": 3425.300,
-        "oneSelf": 2366.900,
-        "consumeEnergy": 5190.020,
-        "produceEnergy": 4770.900,
+        "purchasedMinusSell": 520.150,
+        "homeLoadEnergy": 5192.550,
+        "homeGridEnergy": 1765.650,
+        "backUpEnergy": 3426.900,
+        "oneSelf": 2367.400,
+        "consumeEnergy": 5192.550,
+        "produceEnergy": 4771.400,
         "oneSelfPercent": 0.00000,
         "gridPurchasedPercent": 0.00000,
         "generatorPercent": 0.00000,
@@ -54,13 +54,13 @@
         "isS5": 0,
         "acCoupledEnergy": 0,
         "pvStorageGridInvEnergy": 0,
-        "pvAndAcCoupledEnergy": 4770.900,
+        "pvAndAcCoupledEnergy": 4771.400,
         "energyAmmeter2": 0,
         "showIncomeInfo": true,
         "errorFlag": 0,
-        "totalAndSmartLoadEnergy": 5190.02000
+        "totalAndSmartLoadEnergy": 5192.55000
       }
     ],
-    "traceId": "8w3g2vtj4280530df70rz07c1ass3u65"
+    "traceId": "86gd64918f844kiw2sp283qv04703721"
   }
 }

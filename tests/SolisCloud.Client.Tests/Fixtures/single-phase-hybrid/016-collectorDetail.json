@@ -1,20 +1,20 @@
 {
   "operation": "/v1/api/collectorDetail",
   "request": {
-    "id": "9932451000310004635",
-    "sn": "7O53507254I41110"
+    "id": "1784722472127788915",
+    "sn": "2Z27895689H95440"
   },
   "response": {
     "success": true,
     "code": "0",
     "msg": "success",
     "data": {
-      "id": "9932451000310004635",
-      "sn": "7O53507254I41110",
-      "userId": "5680411015501781771",
+      "id": "1784722472127788915",
+      "sn": "2Z27895689H95440",
+      "userId": "6827465257124659001",
       "model": "WL",
       "stationName": "REDACTED",
-      "stationId": "6426147095506735008",
+      "stationId": "5225445071986602902",
       "version": "100171b6",
       "actualNumber": 0,
       "maximumNumber": 1,
@@ -23,17 +23,17 @@
       "state": 1,
       "factoryTime": "1748365863",
       "dataUploadCycle": 300,
-      "currentWorkingTime": "26111",
-      "totalWorkingTime": "24237911",
+      "currentWorkingTime": "32712",
+      "totalWorkingTime": "24244512",
       "gprsPackage": "A",
-      "dataTimestamp": "1791988012709",
+      "dataTimestamp": "1791994613154",
       "rssiLevel": 1,
-      "rssi": -79,
+      "rssi": -82,
       "timeZone": 2.00,
       "daylight": 0,
       "timeZoneStr": "UTC+02:00",
       "collectorMode": 1
     },
-    "traceId": "58t3133ec5q33n4lmrx27h6q45069z3i"
+    "traceId": "793zq670347h61308130o77a0elofc5o"
   }
 }

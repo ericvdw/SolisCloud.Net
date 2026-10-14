@@ -1,6 +1,6 @@
 # Fixture: single-phase hybrid with battery
 
-Captured with `solis capture` on 2026-10-14 (afternoon, UTC+2) and sanitised:
+Captured with `solis capture` on 2026-10-14 at 18:19 (UTC+2), just after sunset, and sanitised:
 - IDs and serial numbers are consistent fakes.
 - Names, addresses and contact details are `REDACTED`.
 

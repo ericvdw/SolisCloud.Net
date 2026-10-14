@@ -1,8 +1,8 @@
 {
   "operation": "/v1/api/inverterAll",
   "request": {
-    "id": "5541177510994085392",
-    "sn": "1666762972173069",
+    "id": "7501601124933059954",
+    "sn": "1243838603845561",
     "money": "ZAR"
   },
   "response": {
@@ -11,8 +11,8 @@
     "msg": "success",
     "data": [
       {
-        "inverterId": "5541177510994085392",
-        "id": "3465569798221313454",
+        "inverterId": "7501601124933059954",
+        "id": "1386503950935357292",
         "money": 0.000,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
@@ -60,32 +60,32 @@
         "totalAndSmartLoadEnergy": 0.00000
       },
       {
-        "inverterId": "5541177510994085392",
-        "id": "8056181244533697248",
-        "money": 16698.150,
+        "inverterId": "7501601124933059954",
+        "id": "4498176266718517896",
+        "money": 16699.900,
         "moneyStr": "K ZAR",
         "moneyPec": "0.001",
-        "energy": 4770.900,
+        "energy": 4771.400,
         "energyStr": "MWh",
         "energyPec": "0.001",
         "epmLoadEnergy": 0.000,
-        "fullHour": 596.36,
+        "fullHour": 596.43,
         "dateStr": "2026",
         "year": 2026,
         "timeZone": 2.00,
-        "batteryDischargeEnergy": 2303.000,
+        "batteryDischargeEnergy": 2305.000,
         "batteryChargeEnergy": 2404.000,
-        "gridPurchasedEnergy": 520.120,
+        "gridPurchasedEnergy": 520.150,
         "gridPurchasedIncome": 0.000,
         "gridSellEnergy": 0.000,
         "gridSellIncome": 0.000,
-        "purchasedMinusSell": 520.120,
-        "homeLoadEnergy": 4689.000,
+        "purchasedMinusSell": 520.150,
+        "homeLoadEnergy": 4691.000,
         "homeGridEnergy": 1255.900,
-        "backUpEnergy": 3425.300,
-        "oneSelf": 2366.900,
-        "consumeEnergy": 5190.020,
-        "produceEnergy": 4770.900,
+        "backUpEnergy": 3426.900,
+        "oneSelf": 2367.400,
+        "consumeEnergy": 5192.550,
+        "produceEnergy": 4771.400,
         "oneSelfPercent": 0.00000,
         "gridPurchasedPercent": 0.00000,
         "generatorPercent": 0.00000,
@@ -103,12 +103,12 @@
         "isEnergyStorage": true,
         "isS5": 0,
         "acCoupledEnergy": 0.00000,
-        "pvAndAcCoupledEnergy": 4770.90000,
+        "pvAndAcCoupledEnergy": 4771.40000,
         "showIncomeInfo": true,
         "errorFlag": 0,
-        "totalAndSmartLoadEnergy": 4681.20000
+        "totalAndSmartLoadEnergy": 4682.80000
       }
     ],
-    "traceId": "5p79127r7m4v177c54628s6173486r61"
+    "traceId": "5x887d6kn547911c534v04abd5z0i3hi"
   }
 }

@@ -10,8 +10,8 @@ namespace SolisCloud.Tests;
 /// </summary>
 public sealed class QueryTests
 {
-    private const string StationId = "6426147095506735008";
-    private const string InverterSn = "1666762972173069";
+    private const string StationId = "5225445071986602902";
+    private const string InverterSn = "1243838603845561";
     private static readonly TimeSpan SouthAfrica = TimeSpan.FromHours(2);
     private static readonly DateTime CaptureDay = new(2026, 10, 14);
 
@@ -29,10 +29,10 @@ public sealed class QueryTests
         Assert.Equal("ZAR", station.Currency);
         Assert.Equal(1, station.InverterCount);
         Assert.Equal(5.6, station.Capacity!.Value.Kilowatts, precision: 9);
-        Assert.Equal(997, station.Power!.Value.Watts, precision: 6);
-        Assert.Equal(22.7, station.EnergyToday!.Value.KilowattHours, precision: 9);
-        Assert.Equal(4782, station.EnergyTotal!.Value.KilowattHours, precision: 6);
-        Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1791988136023), station.LastUpdated);
+        Assert.Equal(7, station.Power!.Value.Watts, precision: 6);
+        Assert.Equal(23.2, station.EnergyToday!.Value.KilowattHours, precision: 9);
+        Assert.Equal(4783, station.EnergyTotal!.Value.KilowattHours, precision: 6);
+        Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1791994651589), station.LastUpdated);
 
         // Live battery and grid figures are only in the details.
         Assert.Null(station.BatteryPower);
@@ -46,11 +46,12 @@ public sealed class QueryTests
 
         Station station = await fixture.Client.GetStationAsync(StationId, TestContext.Current.CancellationToken);
 
-        Assert.Equal(-1978, station.BatteryPower!.Value.Watts, precision: 6);
-        Assert.Equal(-32, station.GridPower!.Value.Watts, precision: 6);
-        Assert.Equal(2590, station.LoadPower!.Value.Watts, precision: 6);
-        Assert.Equal(73, station.BatteryStateOfCharge);
-        Assert.Equal(0.39, station.GridImportedToday!.Value.KilowattHours, precision: 9);
+        Assert.Equal(-460, station.BatteryPower!.Value.Watts, precision: 6);
+        Assert.Equal(0, station.GridPower!.Value.Watts, precision: 6);
+        Assert.Equal(440, station.LoadPower!.Value.Watts, precision: 6);
+        Assert.Equal(61, station.BatteryStateOfCharge);
+        Assert.Equal("Africa/Harare", station.TimeZoneId);
+        Assert.Equal(0.42, station.GridImportedToday!.Value.KilowattHours, precision: 9);
         Assert.Equal(10, station.BatteryChargedToday!.Value.KilowattHours, precision: 9);
         Assert.Equal("{\"id\":\"" + StationId + "\"}", fixture.Handler.Requests[0].Body);
     }
@@ -67,23 +68,23 @@ public sealed class QueryTests
         Assert.Equal(StationId, inverter.StationId);
         Assert.Equal("S6-EH1P8K-L-PLUS", inverter.Model);
         Assert.Equal("270014", inverter.SoftwareVersion);
-        Assert.Equal("7O53507254I41110", inverter.CollectorSerialNumber);
+        Assert.Equal("2Z27895689H95440", inverter.CollectorSerialNumber);
         Assert.Equal(8, inverter.RatedPower!.Value.Kilowatts, precision: 9);
         Assert.Equal(4783, inverter.EnergyTotal!.Value.KilowattHours, precision: 6);
-        Assert.Equal(50.08, inverter.GridFrequency);
-        Assert.Equal(45.1, inverter.Temperature);
-        Assert.Equal(72, inverter.BatteryStateOfCharge);
+        Assert.Equal(50.1, inverter.GridFrequency);
+        Assert.Equal(44.8, inverter.Temperature);
+        Assert.Equal(61, inverter.BatteryStateOfCharge);
         Assert.Equal(99, inverter.BatteryStateOfHealth);
-        Assert.Equal(-37.4, inverter.BatteryCurrent);
-        Assert.Equal(-1978, inverter.BatteryPower!.Value.Watts, precision: 6);
+        Assert.Equal(-8.8, inverter.BatteryCurrent);
+        Assert.Equal(-460, inverter.BatteryPower!.Value.Watts, precision: 6);
 
         // Two MPPT inputs (dcInputtype 1), one AC phase (acOutputType 0).
         Assert.Equal(2, inverter.PvStrings.Count);
-        Assert.Equal(190.2, inverter.PvStrings[0].Voltage);
-        Assert.Equal(3.1, inverter.PvStrings[0].Current);
-        Assert.Equal(590, inverter.PvStrings[0].Power!.Value.Watts, precision: 6);
+        Assert.Equal(74.9, inverter.PvStrings[0].Voltage);
+        Assert.Equal(0.1, inverter.PvStrings[0].Current);
+        Assert.Equal(7, inverter.PvStrings[0].Power!.Value.Watts, precision: 6);
         AcPhase phase = Assert.Single(inverter.AcPhases);
-        Assert.Equal(237.0, phase.Voltage);
+        Assert.Equal(236.1, phase.Voltage);
         Assert.Equal(SolisEndpoints.InverterDetailList.Path, fixture.Handler.Requests[0].Path);
     }
 
@@ -95,7 +96,7 @@ public sealed class QueryTests
         Inverter inverter = await fixture.Client.GetInverterAsync(InverterSn, TestContext.Current.CancellationToken);
 
         Assert.Equal(InverterSn, inverter.SerialNumber);
-        Assert.Equal(22.7, inverter.EnergyToday!.Value.KilowattHours, precision: 9);
+        Assert.Equal(23.2, inverter.EnergyToday!.Value.KilowattHours, precision: 9);
         Assert.Equal("{\"sn\":\"" + InverterSn + "\"}", fixture.Handler.Requests[0].Body);
     }
 
@@ -107,20 +108,20 @@ public sealed class QueryTests
         IReadOnlyList<InverterSample> samples = await fixture.Client.GetInverterDayAsync(
             InverterSn, CaptureDay, SouthAfrica, TestContext.Current.CancellationToken);
 
-        Assert.Equal(198, samples.Count);
+        Assert.Equal(220, samples.Count);
         Assert.Equal(new DateTimeOffset(2026, 10, 14, 0, 1, 40, SouthAfrica), TruncateMilliseconds(samples[0].Time));
 
         InverterSample last = samples[samples.Count - 1];
-        Assert.Equal(new DateTimeOffset(2026, 10, 14, 16, 26, 52, SouthAfrica), TruncateMilliseconds(last.Time));
+        Assert.Equal(new DateTimeOffset(2026, 10, 14, 18, 16, 53, SouthAfrica), TruncateMilliseconds(last.Time));
         Assert.Equal(SouthAfrica, last.Time.Offset);
 
-        // "pac": 589, "pacPec": "0.001", "pacStr": "kW" is 0.589 kW.
-        Assert.Equal(589, last.AcPower!.Value.Watts, precision: 6);
-        Assert.Equal(-1978, last.BatteryPower!.Value.Watts, precision: 6);
-        Assert.Equal(-32, last.GridPower!.Value.Watts, precision: 6);
-        Assert.Equal(2590, last.LoadPower!.Value.Watts, precision: 6);
-        Assert.Equal(72, last.BatteryStateOfCharge);
-        Assert.Equal(22.7, last.EnergyToday!.Value.KilowattHours, precision: 9);
+        // "pac": 7, "pacPec": "0.001", "pacStr": "kW" is 0.007 kW.
+        Assert.Equal(7, last.AcPower!.Value.Watts, precision: 6);
+        Assert.Equal(-460, last.BatteryPower!.Value.Watts, precision: 6);
+        Assert.Equal(0, last.GridPower!.Value.Watts, precision: 6);
+        Assert.Equal(440, last.LoadPower!.Value.Watts, precision: 6);
+        Assert.Equal(61, last.BatteryStateOfCharge);
+        Assert.Equal(23.2, last.EnergyToday!.Value.KilowattHours, precision: 9);
         Assert.Equal(2, last.PvStrings.Count);
 
         Assert.Equal(
@@ -137,9 +138,9 @@ public sealed class QueryTests
             StationId, CaptureDay, SouthAfrica, TestContext.Current.CancellationToken);
 
         StationSample last = points[points.Count - 1];
-        Assert.Equal(new DateTimeOffset(2026, 10, 14, 16, 25, 0, SouthAfrica), last.Time);
-        Assert.Equal(589, last.Power!.Value.Watts, precision: 6);
-        Assert.Equal(2599, last.LoadPower!.Value.Watts, precision: 6);
+        Assert.Equal(new DateTimeOffset(2026, 10, 14, 18, 15, 0, SouthAfrica), last.Time);
+        Assert.Equal(7, last.Power!.Value.Watts, precision: 6);
+        Assert.Equal(467, last.LoadPower!.Value.Watts, precision: 6);
 
         // Load = generation - export - charging, at every point.
         Assert.All(points, point => Assert.Equal(
@@ -162,22 +163,22 @@ public sealed class QueryTests
         Assert.Equal(new DateTime(2026, 10, 1), days[0].PeriodStart);
         EnergyRecord today = days[days.Count - 1];
         Assert.Equal(new DateTime(2026, 10, 14), today.PeriodStart);
-        Assert.Equal(22.7, today.Produced!.Value.KilowattHours, precision: 9);
-        Assert.Equal(19.09, today.Consumed!.Value.KilowattHours, precision: 9);
-        Assert.Equal(0.39, today.GridImported!.Value.KilowattHours, precision: 9);
+        Assert.Equal(23.2, today.Produced!.Value.KilowattHours, precision: 9);
+        Assert.Equal(21.62, today.Consumed!.Value.KilowattHours, precision: 9);
+        Assert.Equal(0.42, today.GridImported!.Value.KilowattHours, precision: 9);
         Assert.Equal(10, today.BatteryCharged!.Value.KilowattHours, precision: 9);
-        Assert.Equal(79.45m, today.Income);
+        Assert.Equal(81.2m, today.Income);
 
         Assert.Equal(10, months.Count);
         Assert.Equal(new DateTime(2026, 10, 1), months[months.Count - 1].PeriodStart);
 
-        // "money": 953.4, "moneyPec": "0.001", "moneyStr": "K ZAR" is R953.40.
-        Assert.Equal(953.4m, months[months.Count - 1].Income);
+        // "money": 955.15, "moneyPec": "0.001", "moneyStr": "K ZAR" is R955.15.
+        Assert.Equal(955.15m, months[months.Count - 1].Income);
 
         EnergyRecord lifetime = Assert.Single(years);
         Assert.Equal(new DateTime(2026, 1, 1), lifetime.PeriodStart);
-        Assert.Equal(4770.9, lifetime.Produced!.Value.KilowattHours, precision: 6);
-        Assert.Equal(16698.15m, lifetime.Income);
+        Assert.Equal(4771.4, lifetime.Produced!.Value.KilowattHours, precision: 6);
+        Assert.Equal(16699.9m, lifetime.Income);
     }
 
     [Fact]
