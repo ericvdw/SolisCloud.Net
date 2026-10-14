@@ -235,6 +235,8 @@ public sealed class SolisCloudClient : IDisposable
         {
             Content = content,
         };
+        // Skip the "Expect: 100-continue" round trip some stacks (e.g. .NET Framework) add to POSTs by default.
+        request.Headers.ExpectContinue = false;
         request.Headers.TryAddWithoutValidation("Date", date);
         request.Headers.TryAddWithoutValidation("Authorization", SolisRequestSigner.FormatAuthorization(_apiId, signature));
         return request;
