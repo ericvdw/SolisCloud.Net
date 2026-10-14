@@ -20,6 +20,7 @@ public sealed class FieldRulesTests
     [InlineData("sno")]
     [InlineData("city")]
     [InlineData("someUndocumentedId")]
+    [InlineData("iccid")]
     public void Identifiers(string name) => Assert.Equal(FieldKind.Identifier, FieldRules.Classify(name));
 
     [Theory]
@@ -33,6 +34,11 @@ public sealed class FieldRulesTests
     [InlineData("cityStr")]
     [InlineData("pic1Url")]
     [InlineData("remark2")]
+    [InlineData("addrOrigin")]
+    [InlineData("buildAddr")]
+    [InlineData("weather")]
+    [InlineData("tag")]
+    [InlineData("monitorName")]
     public void Personal_text(string name) => Assert.Equal(FieldKind.PersonalText, FieldRules.Classify(name));
 
     [Theory]
@@ -53,5 +59,8 @@ public sealed class FieldRulesTests
     [InlineData("alarmCode")]
     [InlineData("dataTimestamp")]
     [InlineData("batteryCapacitySoc")]
+    [InlineData("timeZoneStandardId")]
+    [InlineData("batteryTypeName")]
+    [InlineData("parallelAddr")]
     public void Measurements_and_settings_are_kept(string name) => Assert.Equal(FieldKind.Keep, FieldRules.Classify(name));
 }

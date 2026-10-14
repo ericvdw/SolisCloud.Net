@@ -74,6 +74,46 @@ public sealed class JsonSanitizerTests
     }
 
     [Fact]
+    public void A_value_is_replaced_even_before_the_document_that_identifies_it()
+    {
+        // The station detail mentions the inverter's serial number inside free text before the inverter list,
+        // where "sn" marks it as an identifier, has been seen.
+        IReadOnlyList<string> results = _sanitizer.SanitizeAll(
+            ["{\"note\":\"Inverter 120B40198150131 commissioned\"}", SampleData.InverterList]);
+
+        Assert.DoesNotContain(SampleData.InverterSn, results[0], StringComparison.Ordinal);
+        Assert.Contains("Inverter ", results[0], StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Json_inside_a_string_is_sanitised_and_stays_a_string()
+    {
+        using var document = JsonDocument.Parse(_sanitizer.Sanitize(SampleData.StationDetail));
+
+        string extraInfo = document.RootElement.GetProperty("extraInfo").GetString()!;
+        Assert.DoesNotContain(SampleData.InverterSn, extraInfo, StringComparison.Ordinal);
+        using var inner = JsonDocument.Parse(extraInfo);
+        Assert.Equal("3126", inner.RootElement.GetProperty("invs")[0].GetProperty("m").GetString());
+        Assert.Equal(
+            inner.RootElement.GetProperty("inverterSn").GetString(),
+            inner.RootElement.GetProperty("invs")[0].GetProperty("sn").GetString());
+    }
+
+    [Fact]
+    public void Addresses_and_place_names_are_removed_but_settings_kept()
+    {
+        using var document = JsonDocument.Parse(_sanitizer.Sanitize(SampleData.StationDetail));
+        JsonElement root = document.RootElement;
+
+        Assert.Equal(JsonSanitizer.Redacted, root.GetProperty("addrOrigin").GetString());
+        Assert.Equal(JsonSanitizer.Redacted, root.GetProperty("buildAddr").GetString());
+        Assert.Equal(JsonSanitizer.Redacted, root.GetProperty("weather").GetString());
+        Assert.Equal("Africa/Johannesburg", root.GetProperty("timeZoneStandardId").GetString());
+        Assert.Equal("(UTC+02:00) Africa/Johannesburg", root.GetProperty("timeZoneName").GetString());
+        Assert.Equal("Pylontech US3000C", root.GetProperty("batteryTypeName").GetString());
+    }
+
+    [Fact]
     public void Short_values_are_not_replaced_by_coincidence()
     {
         // "ZAR" and "1" are ordinary values; an ID of "1" must not turn every 1 into a fake.

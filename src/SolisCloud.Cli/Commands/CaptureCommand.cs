@@ -18,13 +18,19 @@ namespace SolisCloud.Cli.Commands;
 /// </remarks>
 internal sealed class CaptureCommand
 {
+    // Encoding.UTF8 writes a byte-order mark, which many JSON tools (e.g. Python's json module) reject.
+    private static readonly UTF8Encoding Utf8WithoutBom = new(encoderShouldEmitUTF8Identifier: false);
+
     private readonly CliContext _context;
     private readonly SolisCloudClient _client;
     private readonly JsonSanitizer? _sanitizer;
     private readonly string _directory;
     private readonly DateOnly? _day;
     private readonly Dictionary<string, StationSettings> _stations = new(StringComparer.Ordinal);
-    private int _fileNumber;
+
+    // Everything is held until the end and sanitised together: a value can only be recognised as sensitive once
+    // the response that names it has been seen, and that isn't always the first response that contains it.
+    private readonly List<(string FileName, string Json)> _captured = [];
     private int _failed;
 
     private CaptureCommand(CliContext context, SolisCloudClient client, JsonSanitizer? sanitizer, string directory, DateOnly? day)
@@ -82,6 +88,7 @@ internal sealed class CaptureCommand
         await CaptureDevicesAsync(SolisEndpoints.WeatherList, SolisEndpoints.WeatherDetail, cancellationToken);
         await CaptureDevicesAsync(SolisEndpoints.MeterList, SolisEndpoints.MeterDetail, cancellationToken);
 
+        await WriteFilesAsync(cancellationToken);
         return await WriteSummaryAsync();
     }
 
@@ -179,7 +186,7 @@ internal sealed class CaptureCommand
         try
         {
             SolisCloudResponse response = await _client.SendAsync(endpoint, request, cancellationToken);
-            await SaveAsync(endpoint, request, response.Json, error: null, cancellationToken);
+            Record(endpoint, request, response.Json, error: null);
             return response.Data;
         }
         catch (Exception ex) when (Failures.IsRequestFailure(ex, cancellationToken))
@@ -187,12 +194,12 @@ internal sealed class CaptureCommand
             _failed++;
             string description = Failures.Describe(ex);
             await _context.Error.WriteLineAsync("  " + endpoint.Name + ": " + description);
-            await SaveAsync(endpoint, request, ResponseText(ex), description, cancellationToken);
+            Record(endpoint, request, ResponseText(ex), description);
             return null;
         }
     }
 
-    private async Task SaveAsync(SolisEndpoint endpoint, byte[] request, string? response, string? error, CancellationToken cancellationToken)
+    private void Record(SolisEndpoint endpoint, byte[] request, string? response, string? error)
     {
         string document = JsonText.Write(writer =>
         {
@@ -218,10 +225,26 @@ internal sealed class CaptureCommand
             writer.WriteEndObject();
         });
 
-        _fileNumber++;
-        string fileName = string.Create(CultureInfo.InvariantCulture, $"{_fileNumber:000}-{endpoint.Name.Replace('/', '-')}.json");
-        string content = _sanitizer?.Sanitize(document) ?? document;
-        await File.WriteAllTextAsync(Path.Combine(_directory, fileName), content + "\n", Encoding.UTF8, cancellationToken);
+        string fileName = string.Create(
+            CultureInfo.InvariantCulture,
+            $"{_captured.Count + 1:000}-{endpoint.Name.Replace('/', '-')}.json");
+        _captured.Add((fileName, document));
+    }
+
+    private async Task WriteFilesAsync(CancellationToken cancellationToken)
+    {
+        IReadOnlyList<string> contents = _sanitizer is null
+            ? [.. _captured.Select(file => file.Json)]
+            : _sanitizer.SanitizeAll([.. _captured.Select(file => file.Json)]);
+
+        for (int i = 0; i < _captured.Count; i++)
+        {
+            await File.WriteAllTextAsync(
+                Path.Combine(_directory, _captured[i].FileName),
+                contents[i] + "\n",
+                Utf8WithoutBom,
+                cancellationToken);
+        }
     }
 
     private async Task<int> WriteSummaryAsync()
@@ -229,7 +252,7 @@ internal sealed class CaptureCommand
         TextWriter output = _context.Output;
         await output.WriteLineAsync(string.Create(
             CultureInfo.InvariantCulture,
-            $"Captured {_fileNumber} requests ({_failed} failed) to {_directory}"));
+            $"Captured {_captured.Count} requests ({_failed} failed) to {_directory}"));
 
         await output.WriteLineAsync(_sanitizer is null
             ? "NOT sanitised: these files contain your IDs, serial numbers, names and location. Don't share them."

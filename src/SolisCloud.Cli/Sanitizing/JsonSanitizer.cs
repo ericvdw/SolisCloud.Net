@@ -8,7 +8,7 @@ namespace SolisCloud.Cli.Sanitizing;
 /// Removes personal data from SolisCloud JSON so responses can be shared, e.g. as test fixtures.
 /// </summary>
 /// <remarks>
-/// <para>Each document is processed in two passes:</para>
+/// <para><see cref="SanitizeAll"/> works in two passes over a whole set of documents:</para>
 /// <list type="number">
 /// <item>Collect: every property that <see cref="FieldRules"/> marks as sensitive has its value recorded with a
 /// replacement (a stable fake for identifiers, <see cref="Redacted"/> for personal text).</item>
@@ -17,8 +17,12 @@ namespace SolisCloud.Cli.Sanitizing;
 /// name repeated in an undocumented <c>title</c> field.</item>
 /// </list>
 /// <para>
-/// Recorded values carry over between documents, so one instance should sanitise a whole capture, starting with
-/// the station and device lists.
+/// Collecting from every document before writing any matters: a station's details can mention an inverter's
+/// serial number before the inverter list (where the rules recognise it) has been seen.
+/// </para>
+/// <para>
+/// Some string values are themselves JSON (station details carry an <c>extraInfo</c> string with inverter serial
+/// numbers inside). Those are parsed, sanitised by the same rules, and written back as strings.
 /// </para>
 /// <para>
 /// This is best-effort. Always read a capture before sharing it.
@@ -35,6 +39,11 @@ internal sealed class JsonSanitizer
     private const int MinimumNumberMatchLength = 6;
     private const int MinimumEmbeddedLength = 6;
 
+    private static readonly JsonWriterOptions CompactWriterOptions = new()
+    {
+        Encoder = JsonText.WriterOptions.Encoder,
+    };
+
     private readonly Pseudonymizer _pseudonymizer;
     private readonly Dictionary<string, string> _replacements = new(StringComparer.Ordinal);
     private List<KeyValuePair<string, string>>? _embeddedReplacements;
@@ -45,24 +54,41 @@ internal sealed class JsonSanitizer
     }
 
     /// <summary>
-    /// Returns a sanitised, indented copy of <paramref name="json"/>.
+    /// Returns sanitised, indented copies of <paramref name="documents"/>, in the same order.
     /// </summary>
-    /// <exception cref="JsonException"><paramref name="json"/> is not valid JSON.</exception>
-    public string Sanitize(string json)
+    /// <exception cref="JsonException">A document is not valid JSON.</exception>
+    public IReadOnlyList<string> SanitizeAll(IReadOnlyList<string> documents)
     {
-        using var document = JsonDocument.Parse(json);
-        return Sanitize(document.RootElement);
+        List<JsonDocument> parsed = new(documents.Count);
+        try
+        {
+            foreach (string json in documents)
+            {
+                parsed.Add(JsonDocument.Parse(json));
+            }
+
+            foreach (JsonDocument document in parsed)
+            {
+                Collect(document.RootElement, FieldKind.Keep);
+            }
+
+            _embeddedReplacements = null;
+            return [.. parsed.Select(document => JsonText.Write(writer => Write(writer, document.RootElement, FieldKind.Keep)))];
+        }
+        finally
+        {
+            foreach (JsonDocument document in parsed)
+            {
+                document.Dispose();
+            }
+        }
     }
 
     /// <summary>
-    /// Returns a sanitised, indented copy of <paramref name="element"/>.
+    /// Returns a sanitised, indented copy of one document. Values recorded from earlier calls still apply.
     /// </summary>
-    public string Sanitize(JsonElement element)
-    {
-        Collect(element, FieldKind.Keep);
-        _embeddedReplacements = null;
-        return JsonText.Write(writer => Write(writer, element, FieldKind.Keep));
-    }
+    /// <exception cref="JsonException"><paramref name="json"/> is not valid JSON.</exception>
+    public string Sanitize(string json) => SanitizeAll([json])[0];
 
     private void Collect(JsonElement element, FieldKind kind)
     {
@@ -89,12 +115,25 @@ internal sealed class JsonSanitizer
                 Record(element.GetString()!, kind);
                 break;
 
+            case JsonValueKind.String:
+                CollectEmbedded(element.GetString()!);
+                break;
+
             case JsonValueKind.Number when kind is FieldKind.Identifier && IsInteger(element):
                 Record(element.GetRawText(), kind);
                 break;
 
             default:
                 break;
+        }
+    }
+
+    private void CollectEmbedded(string value)
+    {
+        using JsonDocument? embedded = TryParseEmbedded(value);
+        if (embedded is not null)
+        {
+            Collect(embedded.RootElement, FieldKind.Keep);
         }
     }
 
@@ -154,14 +193,36 @@ internal sealed class JsonSanitizer
             return value;
         }
 
-        return kind switch
+        switch (kind)
         {
-            FieldKind.Location => "0",
-            FieldKind.Identifier or FieldKind.PersonalText => _replacements[value],
-            _ => value.Length >= MinimumExactMatchLength && _replacements.TryGetValue(value, out string? replacement)
-                ? replacement
-                : ReplaceEmbedded(value),
-        };
+            case FieldKind.Location:
+                return "0";
+
+            case FieldKind.Identifier or FieldKind.PersonalText:
+                return _replacements[value];
+
+            default:
+                if (value.Length >= MinimumExactMatchLength && _replacements.TryGetValue(value, out string? replacement))
+                {
+                    return replacement;
+                }
+
+                using (JsonDocument? embedded = TryParseEmbedded(value))
+                {
+                    return embedded is null ? ReplaceEmbedded(value) : WriteCompact(embedded.RootElement);
+                }
+        }
+    }
+
+    private string WriteCompact(JsonElement element)
+    {
+        using MemoryStream stream = new();
+        using (Utf8JsonWriter writer = new(stream, CompactWriterOptions))
+        {
+            Write(writer, element, FieldKind.Keep);
+        }
+
+        return System.Text.Encoding.UTF8.GetString(stream.GetBuffer(), 0, (int)stream.Length);
     }
 
     private void WriteNumber(Utf8JsonWriter writer, JsonElement element, FieldKind kind)
@@ -201,6 +262,30 @@ internal sealed class JsonSanitizer
         }
 
         return value;
+    }
+
+    /// <summary>
+    /// Parses a string that holds a JSON object or array, such as <c>"{\"inverterSn\":\"…\"}"</c>.
+    /// Returns <see langword="null"/> for anything else, which is almost every string.
+    /// </summary>
+    private static JsonDocument? TryParseEmbedded(string value)
+    {
+        string trimmed = value.Trim();
+        bool looksLikeJson = trimmed.Length >= 2
+            && ((trimmed[0] == '{' && trimmed[^1] == '}') || (trimmed[0] == '[' && trimmed[^1] == ']'));
+        if (!looksLikeJson)
+        {
+            return null;
+        }
+
+        try
+        {
+            return JsonDocument.Parse(trimmed);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 
     private static bool IsInteger(JsonElement element)

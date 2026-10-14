@@ -41,6 +41,22 @@ internal static class SampleData
         }
         """;
 
+    // Shaped like a real station detail: the street sits in "addrOrigin", and "extraInfo" is a JSON string that
+    // names the inverter by serial number before any inverter response has been seen.
+    public static string StationDetail { get; } = """
+        {
+          "id": "1298491919448631809",
+          "stationName": "Van Wyk Family Home",
+          "addrOrigin": "Protea Street 12",
+          "buildAddr": "12 Protea Street,Stellenbosch,Western Cape,South Africa",
+          "weather": "Sunrise 05:33 Sunset 18:11, Stellenbosch Local Municipality, Clouds",
+          "timeZoneStandardId": "Africa/Johannesburg",
+          "timeZoneName": "(UTC+02:00) Africa/Johannesburg",
+          "batteryTypeName": "Pylontech US3000C",
+          "extraInfo": "{\"invs\":[{\"sn\":\"120B40198150131\",\"m\":\"3126\"}],\"inverterSn\":\"120B40198150131\",\"epVersion\":\"v5\"}"
+        }
+        """;
+
     public static string InverterList { get; } = """
         {
           "page": {
