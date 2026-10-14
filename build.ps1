@@ -86,10 +86,11 @@ Invoke-Step -Name 'restore' -Arguments @('restore', $solution)
 Invoke-Step -Name 'build' -Arguments @('build', $solution, '--no-restore', '--configuration', $Configuration, "-bl:$(Join-Path $logs 'build.binlog')")
 
 if (-not $SkipTests) {
+    # Runs on Microsoft.Testing.Platform (opted into in global.json), so options after the solution are passed to
+    # the xUnit test executables: --report-xunit-trx writes a TRX file per test assembly and framework.
     Invoke-Step -Name 'test' -Arguments @(
-        'test', $solution, '--no-build', '--configuration', $Configuration,
-        '--logger', 'trx', '--logger', 'console;verbosity=normal',
-        '--results-directory', (Join-Path $root 'artifacts/TestResults'))
+        'test', '--solution', $solution, '--no-build', '--configuration', $Configuration,
+        '--results-directory', (Join-Path $root 'artifacts/TestResults'), '--report-xunit-trx')
 }
 
 Write-Summary

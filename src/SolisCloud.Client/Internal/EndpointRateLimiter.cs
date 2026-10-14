@@ -21,7 +21,11 @@ internal sealed class EndpointRateLimiter : IDisposable
 
     private readonly TimeProvider _timeProvider;
     private readonly Dictionary<string, EndpointState> _states = new(StringComparer.Ordinal);
+#if NET9_0_OR_GREATER
+    private readonly Lock _gate = new();
+#else
     private readonly object _gate = new();
+#endif
     private bool _disposed;
 
     public EndpointRateLimiter(TimeProvider timeProvider)

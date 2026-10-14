@@ -49,7 +49,7 @@ public static class SolisRequestSigner
         byte[] digest = MD5.HashData(body);
 #else
         byte[] digest;
-        using (MD5 md5 = MD5.Create())
+        using (var md5 = MD5.Create())
         {
             digest = md5.ComputeHash(body);
         }

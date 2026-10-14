@@ -31,9 +31,12 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Restore">
-    <!-- packages.lock.json pins the full dependency graph; CI restores in locked mode. -->
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-    <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
+    <!--
+      No packages.lock.json: versions are pinned centrally (Directory.Packages.props, with transitive pinning).
+      Lock files were tried and dropped: the trimming analyzers pull in Microsoft.NET.ILLink.Tasks at the version
+      bundled with whichever SDK patch is installed, and the test project's frameworks differ by OS, so the lock
+      file changed from machine to machine and locked-mode restore broke CI. See docs/design.md.
+    -->
     <!-- Fail on known-vulnerable packages, including transitive ones. -->
     <NuGetAudit>true</NuGetAudit>
     <NuGetAuditMode>all</NuGetAuditMode>

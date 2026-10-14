@@ -1,6 +1,5 @@
 // Copyright (c) Eric van der Westhuizen. Licensed under the MIT License.
 
-using System.Text;
 using SolisCloud.Internal;
 
 namespace SolisCloud;
@@ -99,28 +98,13 @@ public sealed class SolisCloudClient : IDisposable
     }
 
     /// <summary>
-    /// Sends a request with a JSON body and returns the raw response.
-    /// </summary>
-    /// <param name="endpoint">The operation to call, usually one of <see cref="SolisEndpoints"/>.</param>
-    /// <param name="jsonBody">The JSON request body, e.g. <c>{"pageNo":1,"pageSize":10}</c>.</param>
-    /// <param name="cancellationToken">A token to cancel the request.</param>
-    /// <returns>The response, with the envelope checked and the <c>data</c> payload as raw JSON.</returns>
-    /// <exception cref="SolisCloudApiException">The API reported a failure.</exception>
-    /// <exception cref="SolisCloudHttpException">The server returned a non-success status or a malformed body.</exception>
-    /// <exception cref="InvalidOperationException">
-    /// The operation modifies data and <see cref="SolisCloudClientOptions.AllowWriteOperations"/> is not set.
-    /// </exception>
-    public Task<SolisCloudResponse> SendAsync(SolisEndpoint endpoint, string jsonBody, CancellationToken cancellationToken = default)
-    {
-        Guard.NotNull(jsonBody);
-        return SendAsync(endpoint, Encoding.UTF8.GetBytes(jsonBody), cancellationToken);
-    }
-
-    /// <summary>
     /// Sends a request with a UTF-8 JSON body and returns the raw response.
     /// </summary>
     /// <param name="endpoint">The operation to call, usually one of <see cref="SolisEndpoints"/>.</param>
-    /// <param name="utf8JsonBody">The UTF-8 encoded JSON request body.</param>
+    /// <param name="utf8JsonBody">
+    /// The UTF-8 encoded JSON request body, e.g. <c>Encoding.UTF8.GetBytes("{\"pageNo\":1,\"pageSize\":10}")</c>.
+    /// Bytes rather than a string, because the <c>Content-MD5</c> signature covers the exact bytes sent.
+    /// </param>
     /// <param name="cancellationToken">A token to cancel the request.</param>
     /// <returns>The response, with the envelope checked and the <c>data</c> payload as raw JSON.</returns>
     /// <exception cref="SolisCloudApiException">The API reported a failure.</exception>

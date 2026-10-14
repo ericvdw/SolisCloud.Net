@@ -10,7 +10,6 @@ SolisCloud.SolisCloudApiException.SolisCloudApiException(string! message) -> voi
 SolisCloud.SolisCloudApiException.SolisCloudApiException(string! message, System.Exception! innerException) -> void
 SolisCloud.SolisCloudClient
 SolisCloud.SolisCloudClient.Dispose() -> void
-SolisCloud.SolisCloudClient.SendAsync(SolisCloud.SolisEndpoint! endpoint, string! jsonBody, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<SolisCloud.SolisCloudResponse!>!
 SolisCloud.SolisCloudClient.SendAsync(SolisCloud.SolisEndpoint! endpoint, System.ReadOnlyMemory<byte> utf8JsonBody, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<SolisCloud.SolisCloudResponse!>!
 SolisCloud.SolisCloudClient.SolisCloudClient(SolisCloud.SolisCloudClientOptions! options) -> void
 SolisCloud.SolisCloudClient.SolisCloudClient(System.Net.Http.HttpClient! httpClient, SolisCloud.SolisCloudClientOptions! options, System.TimeProvider? timeProvider = null) -> void

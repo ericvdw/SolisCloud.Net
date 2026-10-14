@@ -31,10 +31,10 @@ public sealed class WireFormatTests
 
         string[] lines = raw.Split(["\r\n"], StringSplitOptions.None);
         Assert.Equal("POST /v1/api/userStationList HTTP/1.1", lines[0]);
-        Assert.Contains("Content-Type: application/json", lines);
-        Assert.Contains("Content-MD5: kxdxk7rbAsrzSIWgEwhH4w==", lines);
-        Assert.Contains("Date: Fri, 26 Jul 2019 06:00:46 GMT", lines);
-        Assert.Contains("Authorization: API 1300386381676644416:/GOIW8erQaUwWozVKxeKlb/FNkA=", lines);
+        Assert.Contains("Content-Type: application/json", lines, StringComparer.Ordinal);
+        Assert.Contains("Content-MD5: kxdxk7rbAsrzSIWgEwhH4w==", lines, StringComparer.Ordinal);
+        Assert.Contains("Date: Fri, 26 Jul 2019 06:00:46 GMT", lines, StringComparer.Ordinal);
+        Assert.Contains("Authorization: API 1300386381676644416:/GOIW8erQaUwWozVKxeKlb/FNkA=", lines, StringComparer.Ordinal);
         Assert.DoesNotContain(lines, line => line.StartsWith("Expect:", StringComparison.OrdinalIgnoreCase));
         Assert.EndsWith("\r\n\r\n{\"pageNo\":1,\"pageSize\":10}", raw, StringComparison.Ordinal);
     }
