@@ -31,18 +31,25 @@ The first real capture came from a single-phase hybrid system on 2026-10-14: a S
 
 ### Units
 - **Confirmed: in details and lists, the unit string is correct and changes with magnitude.** For example `eToday` is `22.4` with `"kWh"` while `eTotal` is `4.782` with `"MWh"`. Normalise from the unit field.
-- **Confirmed: in history data, the unit strings are wrong.** Day series report `pac: 1154` with `pacStr: "kW"` when the value is in watts. Annual records report `money: 952.35` with `moneyStr: "K ZAR"` when the value is in rand. `inverterAll` reports `energy: 4770.6` with `energyStr: "MWh"` when the value is in kWh: lifetime energy in inverter detail is 4.782 MWh. So history values are in base units (W, kWh, currency), and their unit strings must be ignored.
+- **Confirmed: some values carry a scale factor, `*Pec`.** The value in the unit of `*Str` is `value × *Pec`. History data uses it:
+  - `pac: 1154`, `pacPec: "0.001"`, `pacStr: "kW"` is 1.154 kW.
+  - `money: 953.4`, `moneyPec: "0.001"`, `moneyStr: "K ZAR"` is 0.9534 thousand rand, i.e. R953.40.
+  - `energy: 4770.9`, `energyPec: "0.001"`, `energyStr: "MWh"` is 4.7709 MWh.
+
+  Read without the factor, these look like wrong units. The library always applies it, and treats a missing factor as 1.
+- **Confirmed: values without a unit field** in history data (`batteryPower`, `psum`, `consumeEnergy` in day series) are in watts, and energy totals are in kWh.
 - **Confirmed: `*Zheng` / `*Fu` fields** (pinyin for positive/negative) split a signed value into two non-negative magnitudes, in **watts** and with no unit field. For example `batteryPower: -1.364` (kW) appears as `batteryPowerZheng: 0`, `batteryPowerFu: 1364.0`.
 
 ### Sign conventions
 - **Confirmed: battery power is positive while charging, negative while discharging.** In the morning `batteryPower` is positive as the state of charge rises; overnight it's negative as it falls.
 - **Confirmed: grid power (`psum`) is negative while importing and positive while exporting.** At 05:55, with the battery at its 20% floor, PV produced 300 W, the load used 673 W, and `psum` was `-373`. `psumFu` is the import magnitude. Note this is the opposite of the "positive = import" convention common in home-energy tools such as Home Assistant.
 - **Confirmed: `pac` on a hybrid inverter tracks PV generation**, not the AC output to the house.
-- **Confirmed: in day series, `familyLoadPower` is usually 0.** The load is in `consumeEnergy` (a power in W, despite the name), which equals `power - psum - batteryPower`.
+- **Confirmed: in the station day series, `familyLoadPower` is usually 0.** The load is in `consumeEnergy` (a power in W, despite the name), which equals `power - psum - batteryPower` exactly at every point.
+- **Confirmed: in the inverter day series, the load is split** into the grid-side load (`familyLoadPower`) and the backup-port load (`bypassLoadPower`). Their sum matches `pac - pSum - batteryPower` to within conversion losses. Note the capital S in `pSum` here, where every other response uses `psum`.
 
 ### Timestamps and time zones
 - **Confirmed: `dataTimestamp` in details and day series is a real epoch in milliseconds** (a string). `1791986812838` matches `dataTimestampStr: "2026-10-14 16:06:52 (UTC+02:00)"`. The document's "under UTC+8" note is wrong for these fields.
-- **Confirmed: history records are anchored to China time (UTC+8)**, whatever the station's time zone. The station day series' `time` for local midnight is 16:00 UTC, which is midnight in UTC+8. Monthly and annual records carry `timeZone: 8` and a `date` epoch that only makes sense in UTC+8. Use `timeStr` and `dateStr` (local to the station) as the source of truth for history, not the epochs.
+- **Confirmed: history records are anchored to China time (UTC+8)**, whatever the station's time zone. Even the 5-minute points of the inverter day series carry `timeZone: 8`, although their `dataTimestamp` is a true epoch. The station day series' `time` for local midnight is 16:00 UTC, which is midnight in UTC+8. Monthly and annual records carry `timeZone: 8` and a `date` epoch that only makes sense in UTC+8. Use `timeStr` and `dateStr` (local to the station) as the source of truth for history, not the epochs.
 - **Confirmed:** the station's own offset is in `timeZone` (`2.0`), and its IANA name is in `timeZoneStandardId`.
 
 ### Shapes
@@ -50,7 +57,8 @@ The first real capture came from a single-phase hybrid system on 2026-10-14: a S
 - **Confirmed: history operations return arrays.** Day series have one point per 5 minutes: 194 points by 16:10. Monthly arrays have one record per day so far, annual arrays one per month, and lifetime arrays one per year.
 - **Confirmed: numbered fields** `uPv1…uPv32`, `iPv1…iPv32` and `pow1…pow32` are all present, with zeros for unused strings. Inverter day series have 129 fields per point.
 - **Confirmed: some string fields hold JSON**, e.g. station detail's `extraInfo` (inverter model, serial numbers, export settings).
-- **Confirmed:** history operations require `money` (currency code) and `timeZone` (hours; `2.0` is accepted).
+- **Confirmed:** history operations require `money` (currency code) and `timeZone` (hours; `2` and `2.0` are accepted).
+- **Confirmed: inverter details spell the input count `dcInputtype`** (lower-case t), where the inverter list has `dcInputType`. The number of DC inputs is the value plus one.
 
 ### Still to verify
 - What the API returns when the rate limit is exceeded.

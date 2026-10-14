@@ -22,6 +22,40 @@ Early development. The public API will change until 1.0.
 Log in to SolisCloud and go to **Account → Basic Settings → API Management**. API access may first need to be enabled by Solis support.
 Never commit your API ID or secret.
 
+## Using the library
+
+```csharp
+using SolisCloud;
+using SolisCloud.Models;
+
+using SolisCloudClient client = new(new SolisCloudClientOptions
+{
+    ApiId = Environment.GetEnvironmentVariable("SOLIS_API_ID")!,
+    ApiSecret = Environment.GetEnvironmentVariable("SOLIS_API_SECRET")!,
+    Currency = "ZAR",
+});
+
+await foreach (Station summary in client.GetStationsAsync())
+{
+    Station station = await client.GetStationAsync(summary.Id);
+    Console.WriteLine($"{station.Name}: PV {station.Power}, battery {station.BatteryPower} at {station.BatteryStateOfCharge}%, grid {station.GridPower}");
+
+    // 5-minute history for today, in the station's own time zone.
+    TimeSpan offset = station.UtcOffset ?? TimeSpan.Zero;
+    IReadOnlyList<StationSample> today = await client.GetStationDayAsync(station.Id, DateTime.Today, offset);
+}
+
+await foreach (Inverter inverter in client.GetInvertersAsync())
+{
+    foreach (PvString pv in inverter.PvStrings)
+    {
+        Console.WriteLine($"PV{pv.Number}: {pv.Voltage} V, {pv.Current} A, {pv.Power}");
+    }
+}
+```
+
+Every quantity is a `Power` or `Energy` value in a fixed unit (`.Watts`, `.Kilowatts`, `.KilowattHours`), whatever unit and scale SolisCloud sent. Signs follow SolisCloud: **battery power is positive while charging, grid power is positive while exporting.** Every model keeps the full JSON in `Raw`, and `SendAsync` reaches any operation that isn't modelled yet.
+
 ## The `solis` command-line tool
 
 The CLI reads credentials from environment variables, never from the command line (which would leave them in shell history):

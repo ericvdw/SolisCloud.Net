@@ -35,7 +35,7 @@ internal static class FieldRules
     // Device addresses on a bus, not street addresses.
     private static readonly HashSet<string> NotPersonalText = new(StringComparer.OrdinalIgnoreCase)
     {
-        "rs485ComAddr", "parallelAddr", "modbusAddr",
+        "rs485ComAddr", "rs485addr", "parallelAddr", "modbusAddr",
     };
 
     // Names of types, models and settings ("batteryTypeName", "timeZoneName") describe hardware or configuration.

@@ -19,7 +19,7 @@ namespace SolisCloud;
 /// <see cref="SolisCloudClientOptions.BaseAddress"/>.
 /// </para>
 /// </remarks>
-public sealed class SolisCloudClient : IDisposable
+public sealed partial class SolisCloudClient : IDisposable
 {
     private readonly HttpClient _httpClient;
     private readonly bool _ownsHttpClient;
@@ -28,6 +28,7 @@ public sealed class SolisCloudClient : IDisposable
     private readonly string _apiSecret;
     private readonly Uri _baseAddress;
     private readonly bool _allowWriteOperations;
+    private readonly string _currency;
     private readonly EndpointRateLimiter? _rateLimiter;
     private bool _disposed;
 
@@ -83,6 +84,7 @@ public sealed class SolisCloudClient : IDisposable
             _baseAddress = options.BaseAddress;
 
             _allowWriteOperations = options.AllowWriteOperations;
+            _currency = string.IsNullOrWhiteSpace(options.Currency) ? "EUR" : options.Currency.Trim();
             _timeProvider = timeProvider;
             _rateLimiter = options.EnableRateLimiting ? new EndpointRateLimiter(timeProvider) : null;
         }

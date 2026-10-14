@@ -1,0 +1,22 @@
+{
+  "operation": "/v1/api/ammeterList",
+  "request": {
+    "pageNo": 1,
+    "pageSize": 100
+  },
+  "response": {
+    "success": true,
+    "code": "0",
+    "msg": "success",
+    "data": {
+      "page": {
+        "records": [],
+        "total": 0,
+        "size": 100,
+        "current": 1,
+        "pages": 0
+      }
+    },
+    "traceId": "y1005799z6vv87cm577431468d75dtzr"
+  }
+}

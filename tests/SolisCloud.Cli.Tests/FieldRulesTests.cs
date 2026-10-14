@@ -62,5 +62,6 @@ public sealed class FieldRulesTests
     [InlineData("timeZoneStandardId")]
     [InlineData("batteryTypeName")]
     [InlineData("parallelAddr")]
+    [InlineData("rs485addr")]
     public void Measurements_and_settings_are_kept(string name) => Assert.Equal(FieldKind.Keep, FieldRules.Classify(name));
 }
