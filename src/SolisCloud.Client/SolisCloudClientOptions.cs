@@ -48,6 +48,13 @@ public sealed class SolisCloudClientOptions
     /// </summary>
     public bool AllowWriteOperations { get; set; }
 
+    /// <summary>
+    /// Gets or sets the currency code sent with history requests, which SolisCloud requires and uses for revenue
+    /// figures (<see cref="Models.EnergyRecord.Income"/>). Defaults to <c>EUR</c>; set it to your station's
+    /// <see cref="Models.Station.Currency"/>, e.g. <c>ZAR</c>.
+    /// </summary>
+    public string Currency { get; set; } = "EUR";
+
     /// <inheritdoc />
     /// <remarks>Never includes the API secret.</remarks>
     public override string ToString() =>

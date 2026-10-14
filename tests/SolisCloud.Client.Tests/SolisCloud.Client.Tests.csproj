@@ -17,6 +17,11 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Recorded API responses (see Fixtures/*/README.md), read by FixtureHttpMessageHandler. -->
+    <None Include="Fixtures\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <!--
     .NET Framework: System.Net.Http is a separate assembly that SDK-style projects don't reference by default, and
     the SDK leaves it out of the implicit usings for that reason.

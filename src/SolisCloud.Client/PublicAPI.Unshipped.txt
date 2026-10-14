@@ -1,4 +1,183 @@
 #nullable enable
+SolisCloud.Models.AcPhase
+SolisCloud.Models.AcPhase.Current.get -> double?
+SolisCloud.Models.AcPhase.Number.get -> int
+SolisCloud.Models.AcPhase.Voltage.get -> double?
+SolisCloud.Models.Alarm
+SolisCloud.Models.Alarm.Advice.get -> string?
+SolisCloud.Models.Alarm.Code.get -> string?
+SolisCloud.Models.Alarm.DeviceSerialNumber.get -> string?
+SolisCloud.Models.Alarm.Ended.get -> System.DateTimeOffset?
+SolisCloud.Models.Alarm.Id.get -> string!
+SolisCloud.Models.Alarm.Level.get -> SolisCloud.Models.AlarmLevel
+SolisCloud.Models.Alarm.Message.get -> string?
+SolisCloud.Models.Alarm.Raw.get -> System.Text.Json.JsonElement
+SolisCloud.Models.Alarm.Started.get -> System.DateTimeOffset?
+SolisCloud.Models.Alarm.State.get -> SolisCloud.Models.AlarmState?
+SolisCloud.Models.Alarm.StationId.get -> string?
+SolisCloud.Models.AlarmLevel
+SolisCloud.Models.AlarmLevel.Emergency = 3 -> SolisCloud.Models.AlarmLevel
+SolisCloud.Models.AlarmLevel.General = 2 -> SolisCloud.Models.AlarmLevel
+SolisCloud.Models.AlarmLevel.Tip = 1 -> SolisCloud.Models.AlarmLevel
+SolisCloud.Models.AlarmLevel.Unknown = 0 -> SolisCloud.Models.AlarmLevel
+SolisCloud.Models.AlarmState
+SolisCloud.Models.AlarmState.Processed = 1 -> SolisCloud.Models.AlarmState
+SolisCloud.Models.AlarmState.Resolved = 2 -> SolisCloud.Models.AlarmState
+SolisCloud.Models.AlarmState.Unprocessed = 0 -> SolisCloud.Models.AlarmState
+SolisCloud.Models.DeviceState
+SolisCloud.Models.DeviceState.Alarm = 3 -> SolisCloud.Models.DeviceState
+SolisCloud.Models.DeviceState.Offline = 2 -> SolisCloud.Models.DeviceState
+SolisCloud.Models.DeviceState.Online = 1 -> SolisCloud.Models.DeviceState
+SolisCloud.Models.DeviceState.Unknown = 0 -> SolisCloud.Models.DeviceState
+SolisCloud.Models.Energy
+static SolisCloud.Models.Energy.Add(SolisCloud.Models.Energy left, SolisCloud.Models.Energy right) -> SolisCloud.Models.Energy
+SolisCloud.Models.Energy.CompareTo(SolisCloud.Models.Energy other) -> int
+SolisCloud.Models.Energy.CompareTo(object? obj) -> int
+SolisCloud.Models.Energy.Energy() -> void
+SolisCloud.Models.Energy.Equals(SolisCloud.Models.Energy other) -> bool
+override SolisCloud.Models.Energy.Equals(object? obj) -> bool
+static SolisCloud.Models.Energy.FromKilowattHours(double kilowattHours) -> SolisCloud.Models.Energy
+static SolisCloud.Models.Energy.FromMegawattHours(double megawattHours) -> SolisCloud.Models.Energy
+static SolisCloud.Models.Energy.FromWattHours(double wattHours) -> SolisCloud.Models.Energy
+override SolisCloud.Models.Energy.GetHashCode() -> int
+SolisCloud.Models.Energy.KilowattHours.get -> double
+SolisCloud.Models.Energy.MegawattHours.get -> double
+static SolisCloud.Models.Energy.Negate(SolisCloud.Models.Energy value) -> SolisCloud.Models.Energy
+static SolisCloud.Models.Energy.Subtract(SolisCloud.Models.Energy left, SolisCloud.Models.Energy right) -> SolisCloud.Models.Energy
+override SolisCloud.Models.Energy.ToString() -> string!
+SolisCloud.Models.Energy.ToString(string? format, System.IFormatProvider? formatProvider) -> string!
+SolisCloud.Models.Energy.WattHours.get -> double
+static SolisCloud.Models.Energy.Zero.get -> SolisCloud.Models.Energy
+static SolisCloud.Models.Energy.operator !=(SolisCloud.Models.Energy left, SolisCloud.Models.Energy right) -> bool
+static SolisCloud.Models.Energy.operator +(SolisCloud.Models.Energy left, SolisCloud.Models.Energy right) -> SolisCloud.Models.Energy
+static SolisCloud.Models.Energy.operator -(SolisCloud.Models.Energy left, SolisCloud.Models.Energy right) -> SolisCloud.Models.Energy
+static SolisCloud.Models.Energy.operator -(SolisCloud.Models.Energy value) -> SolisCloud.Models.Energy
+static SolisCloud.Models.Energy.operator <(SolisCloud.Models.Energy left, SolisCloud.Models.Energy right) -> bool
+static SolisCloud.Models.Energy.operator <=(SolisCloud.Models.Energy left, SolisCloud.Models.Energy right) -> bool
+static SolisCloud.Models.Energy.operator ==(SolisCloud.Models.Energy left, SolisCloud.Models.Energy right) -> bool
+static SolisCloud.Models.Energy.operator >(SolisCloud.Models.Energy left, SolisCloud.Models.Energy right) -> bool
+static SolisCloud.Models.Energy.operator >=(SolisCloud.Models.Energy left, SolisCloud.Models.Energy right) -> bool
+SolisCloud.Models.EnergyRecord
+SolisCloud.Models.EnergyRecord.BatteryCharged.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.EnergyRecord.BatteryDischarged.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.EnergyRecord.Consumed.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.EnergyRecord.GridExported.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.EnergyRecord.GridImported.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.EnergyRecord.Income.get -> decimal?
+SolisCloud.Models.EnergyRecord.PeriodStart.get -> System.DateTime
+SolisCloud.Models.EnergyRecord.Produced.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.EnergyRecord.Raw.get -> System.Text.Json.JsonElement
+SolisCloud.Models.Inverter
+SolisCloud.Models.Inverter.AcPhases.get -> System.Collections.Generic.IReadOnlyList<SolisCloud.Models.AcPhase!>!
+SolisCloud.Models.Inverter.AcPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Inverter.BatteryChargedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Inverter.BatteryCurrent.get -> double?
+SolisCloud.Models.Inverter.BatteryDischargedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Inverter.BatteryPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Inverter.BatteryStateOfCharge.get -> double?
+SolisCloud.Models.Inverter.BatteryStateOfHealth.get -> double?
+SolisCloud.Models.Inverter.BatteryVoltage.get -> double?
+SolisCloud.Models.Inverter.CollectorSerialNumber.get -> string?
+SolisCloud.Models.Inverter.EnergyThisMonth.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Inverter.EnergyThisYear.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Inverter.EnergyToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Inverter.EnergyTotal.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Inverter.GridExportedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Inverter.GridFrequency.get -> double?
+SolisCloud.Models.Inverter.GridImportedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Inverter.GridPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Inverter.Id.get -> string!
+SolisCloud.Models.Inverter.LastUpdated.get -> System.DateTimeOffset?
+SolisCloud.Models.Inverter.LoadPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Inverter.LoadToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Inverter.Model.get -> string?
+SolisCloud.Models.Inverter.PvStrings.get -> System.Collections.Generic.IReadOnlyList<SolisCloud.Models.PvString!>!
+SolisCloud.Models.Inverter.RatedPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Inverter.Raw.get -> System.Text.Json.JsonElement
+SolisCloud.Models.Inverter.SerialNumber.get -> string!
+SolisCloud.Models.Inverter.SoftwareVersion.get -> string?
+SolisCloud.Models.Inverter.State.get -> SolisCloud.Models.DeviceState
+SolisCloud.Models.Inverter.StationId.get -> string?
+SolisCloud.Models.Inverter.Temperature.get -> double?
+SolisCloud.Models.InverterSample
+SolisCloud.Models.InverterSample.AcPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.InverterSample.BatteryChargedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.InverterSample.BatteryDischargedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.InverterSample.BatteryPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.InverterSample.BatteryStateOfCharge.get -> double?
+SolisCloud.Models.InverterSample.EnergyToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.InverterSample.GridExportedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.InverterSample.GridImportedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.InverterSample.GridPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.InverterSample.LoadPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.InverterSample.PvStrings.get -> System.Collections.Generic.IReadOnlyList<SolisCloud.Models.PvString!>!
+SolisCloud.Models.InverterSample.Raw.get -> System.Text.Json.JsonElement
+SolisCloud.Models.InverterSample.Temperature.get -> double?
+SolisCloud.Models.InverterSample.Time.get -> System.DateTimeOffset
+SolisCloud.Models.Power
+static SolisCloud.Models.Power.Add(SolisCloud.Models.Power left, SolisCloud.Models.Power right) -> SolisCloud.Models.Power
+SolisCloud.Models.Power.CompareTo(SolisCloud.Models.Power other) -> int
+SolisCloud.Models.Power.CompareTo(object? obj) -> int
+SolisCloud.Models.Power.Equals(SolisCloud.Models.Power other) -> bool
+override SolisCloud.Models.Power.Equals(object? obj) -> bool
+static SolisCloud.Models.Power.FromKilowatts(double kilowatts) -> SolisCloud.Models.Power
+static SolisCloud.Models.Power.FromWatts(double watts) -> SolisCloud.Models.Power
+override SolisCloud.Models.Power.GetHashCode() -> int
+SolisCloud.Models.Power.Kilowatts.get -> double
+static SolisCloud.Models.Power.Negate(SolisCloud.Models.Power value) -> SolisCloud.Models.Power
+SolisCloud.Models.Power.Power() -> void
+static SolisCloud.Models.Power.Subtract(SolisCloud.Models.Power left, SolisCloud.Models.Power right) -> SolisCloud.Models.Power
+override SolisCloud.Models.Power.ToString() -> string!
+SolisCloud.Models.Power.ToString(string? format, System.IFormatProvider? formatProvider) -> string!
+SolisCloud.Models.Power.Watts.get -> double
+static SolisCloud.Models.Power.Zero.get -> SolisCloud.Models.Power
+static SolisCloud.Models.Power.operator !=(SolisCloud.Models.Power left, SolisCloud.Models.Power right) -> bool
+static SolisCloud.Models.Power.operator +(SolisCloud.Models.Power left, SolisCloud.Models.Power right) -> SolisCloud.Models.Power
+static SolisCloud.Models.Power.operator -(SolisCloud.Models.Power left, SolisCloud.Models.Power right) -> SolisCloud.Models.Power
+static SolisCloud.Models.Power.operator -(SolisCloud.Models.Power value) -> SolisCloud.Models.Power
+static SolisCloud.Models.Power.operator <(SolisCloud.Models.Power left, SolisCloud.Models.Power right) -> bool
+static SolisCloud.Models.Power.operator <=(SolisCloud.Models.Power left, SolisCloud.Models.Power right) -> bool
+static SolisCloud.Models.Power.operator ==(SolisCloud.Models.Power left, SolisCloud.Models.Power right) -> bool
+static SolisCloud.Models.Power.operator >(SolisCloud.Models.Power left, SolisCloud.Models.Power right) -> bool
+static SolisCloud.Models.Power.operator >=(SolisCloud.Models.Power left, SolisCloud.Models.Power right) -> bool
+SolisCloud.Models.PvString
+SolisCloud.Models.PvString.Current.get -> double?
+SolisCloud.Models.PvString.Number.get -> int
+SolisCloud.Models.PvString.Power.get -> SolisCloud.Models.Power?
+SolisCloud.Models.PvString.Voltage.get -> double?
+SolisCloud.Models.Station
+SolisCloud.Models.Station.BatteryChargedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Station.BatteryDischargedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Station.BatteryPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Station.BatteryStateOfCharge.get -> double?
+SolisCloud.Models.Station.Capacity.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Station.Currency.get -> string?
+SolisCloud.Models.Station.EnergyThisMonth.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Station.EnergyThisYear.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Station.EnergyToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Station.EnergyTotal.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Station.GridExportedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Station.GridImportedToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Station.GridPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Station.Id.get -> string!
+SolisCloud.Models.Station.InverterCount.get -> int?
+SolisCloud.Models.Station.LastUpdated.get -> System.DateTimeOffset?
+SolisCloud.Models.Station.LoadPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Station.LoadToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Station.Name.get -> string?
+SolisCloud.Models.Station.Power.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Station.Raw.get -> System.Text.Json.JsonElement
+SolisCloud.Models.Station.State.get -> SolisCloud.Models.DeviceState
+SolisCloud.Models.Station.TimeZoneId.get -> string?
+SolisCloud.Models.Station.UtcOffset.get -> System.TimeSpan?
+SolisCloud.Models.StationSample
+SolisCloud.Models.StationSample.BatteryPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.StationSample.BatteryStateOfCharge.get -> double?
+SolisCloud.Models.StationSample.GridPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.StationSample.LoadPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.StationSample.Power.get -> SolisCloud.Models.Power?
+SolisCloud.Models.StationSample.Raw.get -> System.Text.Json.JsonElement
+SolisCloud.Models.StationSample.Time.get -> System.DateTimeOffset
 SolisCloud.SolisCloudApiException
 SolisCloud.SolisCloudApiException.ApiMessage.get -> string?
 SolisCloud.SolisCloudApiException.Code.get -> string?
@@ -10,6 +189,16 @@ SolisCloud.SolisCloudApiException.SolisCloudApiException(string! message) -> voi
 SolisCloud.SolisCloudApiException.SolisCloudApiException(string! message, System.Exception! innerException) -> void
 SolisCloud.SolisCloudClient
 SolisCloud.SolisCloudClient.Dispose() -> void
+SolisCloud.SolisCloudClient.GetAlarmsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<SolisCloud.Models.Alarm!>!
+SolisCloud.SolisCloudClient.GetInverterAsync(string! serialNumber, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<SolisCloud.Models.Inverter!>!
+SolisCloud.SolisCloudClient.GetInverterDayAsync(string! serialNumber, System.DateTime day, System.TimeSpan utcOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<SolisCloud.Models.InverterSample!>!>!
+SolisCloud.SolisCloudClient.GetInvertersAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<SolisCloud.Models.Inverter!>!
+SolisCloud.SolisCloudClient.GetStationAsync(string! stationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<SolisCloud.Models.Station!>!
+SolisCloud.SolisCloudClient.GetStationDayAsync(string! stationId, System.DateTime day, System.TimeSpan utcOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<SolisCloud.Models.StationSample!>!>!
+SolisCloud.SolisCloudClient.GetStationLifetimeAsync(string! stationId, System.TimeSpan utcOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<SolisCloud.Models.EnergyRecord!>!>!
+SolisCloud.SolisCloudClient.GetStationMonthAsync(string! stationId, int year, int month, System.TimeSpan utcOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<SolisCloud.Models.EnergyRecord!>!>!
+SolisCloud.SolisCloudClient.GetStationYearAsync(string! stationId, int year, System.TimeSpan utcOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<SolisCloud.Models.EnergyRecord!>!>!
+SolisCloud.SolisCloudClient.GetStationsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<SolisCloud.Models.Station!>!
 SolisCloud.SolisCloudClient.SendAsync(SolisCloud.SolisEndpoint! endpoint, System.ReadOnlyMemory<byte> utf8JsonBody, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<SolisCloud.SolisCloudResponse!>!
 SolisCloud.SolisCloudClient.SolisCloudClient(SolisCloud.SolisCloudClientOptions! options) -> void
 SolisCloud.SolisCloudClient.SolisCloudClient(System.Net.Http.HttpClient! httpClient, SolisCloud.SolisCloudClientOptions! options, System.TimeProvider? timeProvider = null) -> void
@@ -22,6 +211,8 @@ SolisCloud.SolisCloudClientOptions.ApiSecret.get -> string!
 SolisCloud.SolisCloudClientOptions.ApiSecret.set -> void
 SolisCloud.SolisCloudClientOptions.BaseAddress.get -> System.Uri!
 SolisCloud.SolisCloudClientOptions.BaseAddress.set -> void
+SolisCloud.SolisCloudClientOptions.Currency.get -> string!
+SolisCloud.SolisCloudClientOptions.Currency.set -> void
 static SolisCloud.SolisCloudClientOptions.DefaultBaseAddress.get -> System.Uri!
 SolisCloud.SolisCloudClientOptions.EnableRateLimiting.get -> bool
 SolisCloud.SolisCloudClientOptions.EnableRateLimiting.set -> void
@@ -36,8 +227,8 @@ SolisCloud.SolisCloudHttpException.EndpointPath.get -> string?
 SolisCloud.SolisCloudHttpException.ResponseBody.get -> string?
 SolisCloud.SolisCloudHttpException.SolisCloudHttpException() -> void
 SolisCloud.SolisCloudHttpException.SolisCloudHttpException(string! message) -> void
-SolisCloud.SolisCloudHttpException.SolisCloudHttpException(string! message, string! endpointPath, System.Net.HttpStatusCode statusCode, string? responseBody, System.Exception? innerException = null) -> void
 SolisCloud.SolisCloudHttpException.SolisCloudHttpException(string! message, System.Exception! innerException) -> void
+SolisCloud.SolisCloudHttpException.SolisCloudHttpException(string! message, string! endpointPath, System.Net.HttpStatusCode statusCode, string? responseBody, System.Exception? innerException = null) -> void
 SolisCloud.SolisCloudHttpException.StatusCode.get -> System.Net.HttpStatusCode
 SolisCloud.SolisCloudResponse
 SolisCloud.SolisCloudResponse.Data.get -> System.Text.Json.JsonElement
@@ -96,6 +287,6 @@ SolisCloud.SolisRequestSigner
 static SolisCloud.SolisRequestSigner.BuildStringToSign(string! contentMd5, string! contentType, string! date, string! canonicalizedResource) -> string!
 static SolisCloud.SolisRequestSigner.ComputeContentMd5(byte[]! body) -> string!
 static SolisCloud.SolisRequestSigner.ComputeSignature(string! apiSecret, string! stringToSign) -> string!
-const SolisCloud.SolisRequestSigner.ContentType = "application/json" -> string!
 static SolisCloud.SolisRequestSigner.FormatAuthorization(string! apiId, string! signature) -> string!
 static SolisCloud.SolisRequestSigner.FormatDate(System.DateTimeOffset timestamp) -> string!
+const SolisCloud.SolisRequestSigner.ContentType = "application/json" -> string!
