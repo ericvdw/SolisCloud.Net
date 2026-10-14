@@ -1,0 +1,102 @@
+#nullable enable
+SolisCloud.SolisCloudApiException
+SolisCloud.SolisCloudApiException.ApiMessage.get -> string?
+SolisCloud.SolisCloudApiException.Code.get -> string?
+SolisCloud.SolisCloudApiException.EndpointPath.get -> string?
+SolisCloud.SolisCloudApiException.ResponseJson.get -> string?
+SolisCloud.SolisCloudApiException.SolisCloudApiException() -> void
+SolisCloud.SolisCloudApiException.SolisCloudApiException(string! endpointPath, string! code, string? apiMessage, string! responseJson) -> void
+SolisCloud.SolisCloudApiException.SolisCloudApiException(string! message) -> void
+SolisCloud.SolisCloudApiException.SolisCloudApiException(string! message, System.Exception! innerException) -> void
+SolisCloud.SolisCloudClient
+SolisCloud.SolisCloudClient.Dispose() -> void
+SolisCloud.SolisCloudClient.SendAsync(SolisCloud.SolisEndpoint! endpoint, string! jsonBody, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<SolisCloud.SolisCloudResponse!>!
+SolisCloud.SolisCloudClient.SendAsync(SolisCloud.SolisEndpoint! endpoint, System.ReadOnlyMemory<byte> utf8JsonBody, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<SolisCloud.SolisCloudResponse!>!
+SolisCloud.SolisCloudClient.SolisCloudClient(SolisCloud.SolisCloudClientOptions! options) -> void
+SolisCloud.SolisCloudClient.SolisCloudClient(System.Net.Http.HttpClient! httpClient, SolisCloud.SolisCloudClientOptions! options, System.TimeProvider? timeProvider = null) -> void
+SolisCloud.SolisCloudClientOptions
+SolisCloud.SolisCloudClientOptions.AllowWriteOperations.get -> bool
+SolisCloud.SolisCloudClientOptions.AllowWriteOperations.set -> void
+SolisCloud.SolisCloudClientOptions.ApiId.get -> string!
+SolisCloud.SolisCloudClientOptions.ApiId.set -> void
+SolisCloud.SolisCloudClientOptions.ApiSecret.get -> string!
+SolisCloud.SolisCloudClientOptions.ApiSecret.set -> void
+SolisCloud.SolisCloudClientOptions.BaseAddress.get -> System.Uri!
+SolisCloud.SolisCloudClientOptions.BaseAddress.set -> void
+static SolisCloud.SolisCloudClientOptions.DefaultBaseAddress.get -> System.Uri!
+SolisCloud.SolisCloudClientOptions.EnableRateLimiting.get -> bool
+SolisCloud.SolisCloudClientOptions.EnableRateLimiting.set -> void
+SolisCloud.SolisCloudClientOptions.SolisCloudClientOptions() -> void
+override SolisCloud.SolisCloudClientOptions.ToString() -> string!
+SolisCloud.SolisCloudException
+SolisCloud.SolisCloudException.SolisCloudException() -> void
+SolisCloud.SolisCloudException.SolisCloudException(string! message) -> void
+SolisCloud.SolisCloudException.SolisCloudException(string! message, System.Exception? innerException) -> void
+SolisCloud.SolisCloudHttpException
+SolisCloud.SolisCloudHttpException.EndpointPath.get -> string?
+SolisCloud.SolisCloudHttpException.ResponseBody.get -> string?
+SolisCloud.SolisCloudHttpException.SolisCloudHttpException() -> void
+SolisCloud.SolisCloudHttpException.SolisCloudHttpException(string! message) -> void
+SolisCloud.SolisCloudHttpException.SolisCloudHttpException(string! message, string! endpointPath, System.Net.HttpStatusCode statusCode, string? responseBody, System.Exception? innerException = null) -> void
+SolisCloud.SolisCloudHttpException.SolisCloudHttpException(string! message, System.Exception! innerException) -> void
+SolisCloud.SolisCloudHttpException.StatusCode.get -> System.Net.HttpStatusCode
+SolisCloud.SolisCloudResponse
+SolisCloud.SolisCloudResponse.Data.get -> System.Text.Json.JsonElement
+SolisCloud.SolisCloudResponse.Endpoint.get -> SolisCloud.SolisEndpoint!
+SolisCloud.SolisCloudResponse.Json.get -> string!
+SolisCloud.SolisCloudResponse.Message.get -> string?
+SolisCloud.SolisCloudResponse.ServerDate.get -> System.DateTimeOffset?
+SolisCloud.SolisEndpoint
+SolisCloud.SolisEndpoint.ModifiesData.get -> bool
+SolisCloud.SolisEndpoint.Name.get -> string!
+SolisCloud.SolisEndpoint.Path.get -> string!
+SolisCloud.SolisEndpoint.PermitsPerSecond.get -> int
+SolisCloud.SolisEndpoint.SolisEndpoint(string! path, int permitsPerSecond = 2, bool modifiesData = false) -> void
+override SolisCloud.SolisEndpoint.ToString() -> string!
+SolisCloud.SolisEndpoints
+static SolisCloud.SolisEndpoints.AddStation.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.AlarmList.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.All.get -> System.Collections.Generic.IReadOnlyList<SolisCloud.SolisEndpoint!>!
+static SolisCloud.SolisEndpoints.BindCollector.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.BindInverter.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.CollectorDay.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.CollectorDetail.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.CollectorList.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.EpmAll.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.EpmDay.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.EpmDetail.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.EpmList.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.EpmMonth.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.EpmYear.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.Find(string? nameOrPath) -> SolisCloud.SolisEndpoint?
+static SolisCloud.SolisEndpoints.InverterAll.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.InverterDay.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.InverterDetail.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.InverterDetailList.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.InverterList.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.InverterMonth.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.InverterWarranty.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.InverterYear.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.MeterDetail.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.MeterList.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.StationAll.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.StationDay.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.StationDayEnergyList.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.StationDetail.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.StationDetailList.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.StationList.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.StationMonth.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.StationMonthEnergyList.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.StationYear.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.StationYearEnergyList.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.UnbindCollector.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.UpdateStation.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.WeatherDetail.get -> SolisCloud.SolisEndpoint!
+static SolisCloud.SolisEndpoints.WeatherList.get -> SolisCloud.SolisEndpoint!
+SolisCloud.SolisRequestSigner
+static SolisCloud.SolisRequestSigner.BuildStringToSign(string! contentMd5, string! contentType, string! date, string! canonicalizedResource) -> string!
+static SolisCloud.SolisRequestSigner.ComputeContentMd5(byte[]! body) -> string!
+static SolisCloud.SolisRequestSigner.ComputeSignature(string! apiSecret, string! stringToSign) -> string!
+const SolisCloud.SolisRequestSigner.ContentType = "application/json" -> string!
+static SolisCloud.SolisRequestSigner.FormatAuthorization(string! apiId, string! signature) -> string!
+static SolisCloud.SolisRequestSigner.FormatDate(System.DateTimeOffset timestamp) -> string!

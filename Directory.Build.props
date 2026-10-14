@@ -1,0 +1,57 @@
+<Project>
+  <!--
+    Settings shared by every project in the repository. Project files stay small; anything that
+    differs between projects is decided here by convention (src/ vs tests/) rather than repeated.
+    See docs/analyzers.md for why each analysis setting exists.
+  -->
+
+  <PropertyGroup Label="Language">
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Extra compiler diagnostics that are off by default for back-compat reasons. -->
+    <Features>strict</Features>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Analysis">
+    <!-- Every built-in CA rule, at the newest rule set the SDK ships. Tuned in .editorconfig. -->
+    <AnalysisLevel>latest-all</AnalysisLevel>
+    <!-- Make IDE code-style rules (IDExxxx) run during command-line builds, not just in the editor. -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Required for IDE0005 (unnecessary usings) to run on build, and for XML docs on public APIs. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Build output">
+    <!-- .NET 8+ "artifacts" layout: all bin/obj/package output goes under ./artifacts. -->
+    <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true' or '$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Restore">
+    <!-- packages.lock.json pins the full dependency graph; CI restores in locked mode. -->
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
+    <!-- Fail on known-vulnerable packages, including transitive ones. -->
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditMode>all</NuGetAuditMode>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package metadata">
+    <Authors>Eric van der Westhuizen</Authors>
+    <Copyright>Copyright (c) Eric van der Westhuizen</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>solis;soliscloud;solar;inverter;ginlong;home-assistant</PackageTags>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Banned-API list shared by all projects (read by Microsoft.CodeAnalysis.BannedApiAnalyzers). -->
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="BannedSymbols.txt" />
+  </ItemGroup>
+</Project>

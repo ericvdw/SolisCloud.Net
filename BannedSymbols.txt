@@ -1,0 +1,16 @@
+# APIs that must not be used anywhere in this repository (Microsoft.CodeAnalysis.BannedApiAnalyzers, RS0030).
+# Format: <documentation comment ID>;<message shown in the error>
+
+# Time must come from an injected TimeProvider so it can be faked in tests.
+P:System.DateTime.Now;Use TimeProvider.GetLocalNow() so time is testable
+P:System.DateTime.UtcNow;Use TimeProvider.GetUtcNow() so time is testable
+P:System.DateTime.Today;Use TimeProvider.GetLocalNow() so time is testable
+P:System.DateTimeOffset.Now;Use TimeProvider.GetLocalNow() so time is testable
+P:System.DateTimeOffset.UtcNow;Use TimeProvider.GetUtcNow() so time is testable
+
+# Blocking on async code risks thread-pool starvation and deadlocks.
+M:System.Threading.Tasks.Task.Wait;Await the task instead of blocking
+P:System.Threading.Tasks.Task`1.Result;Await the task instead of blocking
+
+# One JSON stack: System.Text.Json (source-generated where possible).
+N:Newtonsoft.Json;Use System.Text.Json

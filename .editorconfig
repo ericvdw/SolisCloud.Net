@@ -1,0 +1,196 @@
+# Code style and analyzer configuration for the whole repository.
+# docs/analyzers.md explains the analyzer setup and the reasoning behind each override below.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{csproj,props,targets,xml,json,yml,yaml}]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.ps1]
+end_of_line = crlf
+
+[*.cs]
+
+#### File header (IDE0073) ####
+file_header_template = Copyright (c) Eric van der Westhuizen. Licensed under the MIT License.
+
+#### Formatting ####
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_between_query_expression_clauses = true
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_space_after_cast = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_preserve_single_line_statements = false
+csharp_preserve_single_line_blocks = true
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = false
+
+#### Language preferences ####
+# Namespaces and usings
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_using_directive_placement = outside_namespace:warning
+dotnet_style_namespace_match_folder = true:warning
+
+# 'var': only when the type is obvious from the right-hand side.
+csharp_style_var_for_built_in_types = false:warning
+csharp_style_var_when_type_is_apparent = true:warning
+csharp_style_var_elsewhere = false:warning
+
+# Braces are always required, even for single-line bodies.
+csharp_prefer_braces = true:warning
+
+# Modifiers and members
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:warning
+dotnet_style_readonly_field = true:warning
+csharp_style_prefer_readonly_struct = true:warning
+csharp_prefer_static_local_function = true:warning
+dotnet_style_qualification_for_field = false:warning
+dotnet_style_qualification_for_property = false:warning
+dotnet_style_qualification_for_method = false:warning
+dotnet_style_qualification_for_event = false:warning
+dotnet_style_predefined_type_for_locals_parameters_members = true:warning
+dotnet_style_predefined_type_for_member_access = true:warning
+
+# Expressions
+csharp_style_implicit_object_creation_when_type_is_apparent = true:warning
+dotnet_style_object_initializer = true:warning
+dotnet_style_collection_initializer = true:warning
+dotnet_style_coalesce_expression = true:warning
+dotnet_style_null_propagation = true:warning
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:warning
+csharp_style_pattern_matching_over_is_with_cast_check = true:warning
+csharp_style_pattern_matching_over_as_with_null_check = true:warning
+csharp_style_throw_expression = true:suggestion
+csharp_style_inlined_variable_declaration = true:warning
+dotnet_style_prefer_auto_properties = true:warning
+csharp_prefer_simple_using_statement = true:suggestion
+
+# Expression-bodied members: allowed, not required.
+csharp_style_expression_bodied_methods = when_on_single_line:silent
+csharp_style_expression_bodied_properties = true:silent
+csharp_style_expression_bodied_accessors = true:silent
+csharp_style_expression_bodied_constructors = false:silent
+
+# Primary constructors capture parameters as hidden mutable state; prefer explicit fields.
+csharp_style_prefer_primary_constructors = false:silent
+
+# Unused code
+csharp_style_unused_value_expression_statement_preference = discard_variable:silent
+csharp_style_unused_value_assignment_preference = discard_variable:warning
+dotnet_code_quality_unused_parameters = all:warning
+
+#### Naming ####
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_style.prefix_i.required_prefix = I
+dotnet_naming_style.prefix_i.capitalization = pascal_case
+dotnet_naming_rule.interfaces_start_with_i.symbols = interfaces
+dotnet_naming_rule.interfaces_start_with_i.style = prefix_i
+dotnet_naming_rule.interfaces_start_with_i.severity = warning
+
+dotnet_naming_symbols.types_and_members.applicable_kinds = class, struct, enum, delegate, method, property, event
+dotnet_naming_style.pascal.capitalization = pascal_case
+dotnet_naming_rule.types_and_members_pascal.symbols = types_and_members
+dotnet_naming_rule.types_and_members_pascal.style = pascal
+dotnet_naming_rule.types_and_members_pascal.severity = warning
+
+dotnet_naming_symbols.constants.applicable_kinds = field, local
+dotnet_naming_symbols.constants.required_modifiers = const
+dotnet_naming_rule.constants_pascal.symbols = constants
+dotnet_naming_rule.constants_pascal.style = pascal
+dotnet_naming_rule.constants_pascal.severity = warning
+
+dotnet_naming_symbols.static_readonly_fields.applicable_kinds = field
+dotnet_naming_symbols.static_readonly_fields.required_modifiers = static, readonly
+dotnet_naming_rule.static_readonly_fields_pascal.symbols = static_readonly_fields
+dotnet_naming_rule.static_readonly_fields_pascal.style = pascal
+dotnet_naming_rule.static_readonly_fields_pascal.severity = warning
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_style.underscore_camel.required_prefix = _
+dotnet_naming_style.underscore_camel.capitalization = camel_case
+dotnet_naming_rule.private_fields_underscore.symbols = private_fields
+dotnet_naming_rule.private_fields_underscore.style = underscore_camel
+dotnet_naming_rule.private_fields_underscore.severity = warning
+
+dotnet_naming_symbols.locals_and_parameters.applicable_kinds = parameter, local
+dotnet_naming_style.camel.capitalization = camel_case
+dotnet_naming_rule.locals_and_parameters_camel.symbols = locals_and_parameters
+dotnet_naming_rule.locals_and_parameters_camel.style = camel
+dotnet_naming_rule.locals_and_parameters_camel.severity = warning
+
+#### IDE rules promoted to build warnings ####
+# (EnforceCodeStyleInBuild only reports IDE rules whose severity is warning or error.)
+dotnet_diagnostic.IDE0005.severity = warning   # Unnecessary using directive
+dotnet_diagnostic.IDE0011.severity = warning   # Add braces
+dotnet_diagnostic.IDE0035.severity = warning   # Unreachable code
+dotnet_diagnostic.IDE0036.severity = warning   # Modifier order
+dotnet_diagnostic.IDE0040.severity = warning   # Accessibility modifiers required
+dotnet_diagnostic.IDE0043.severity = warning   # Invalid format string
+dotnet_diagnostic.IDE0044.severity = warning   # Make field readonly
+dotnet_diagnostic.IDE0051.severity = warning   # Unused private member
+dotnet_diagnostic.IDE0052.severity = warning   # Unread private member
+dotnet_diagnostic.IDE0055.severity = warning   # Formatting
+dotnet_diagnostic.IDE0059.severity = warning   # Unnecessary value assignment
+dotnet_diagnostic.IDE0060.severity = warning   # Unused parameter
+dotnet_diagnostic.IDE0062.severity = warning   # Make local function static
+dotnet_diagnostic.IDE0065.severity = warning   # Using placement
+dotnet_diagnostic.IDE0073.severity = warning   # File header
+dotnet_diagnostic.IDE0076.severity = warning   # Invalid global SuppressMessage
+dotnet_diagnostic.IDE0077.severity = warning   # Avoid legacy SuppressMessage format
+dotnet_diagnostic.IDE0079.severity = warning   # Unnecessary suppression
+dotnet_diagnostic.IDE0080.severity = warning   # Unnecessary '!' operator
+dotnet_diagnostic.IDE0090.severity = warning   # Simplify 'new' expression
+dotnet_diagnostic.IDE0100.severity = warning   # Unnecessary '== true'
+dotnet_diagnostic.IDE0110.severity = warning   # Unnecessary discard
+dotnet_diagnostic.IDE0130.severity = warning   # Namespace must match folder
+dotnet_diagnostic.IDE0161.severity = warning   # File-scoped namespace
+dotnet_diagnostic.IDE1006.severity = warning   # Naming rules
+
+#### CA (.NET analyzer) overrides ####
+# AnalysisLevel=latest-all turns every CA rule on as a warning. These are the deliberate exceptions.
+dotnet_diagnostic.CA1014.severity = none       # CLSCompliant: declared explicitly in the library instead
+dotnet_diagnostic.CA1020.severity = none       # "Too few types in namespace": not useful for a small library
+dotnet_diagnostic.CA1303.severity = none       # Localise literals: no localisation planned
+dotnet_diagnostic.CA1848.severity = none       # LoggerMessage delegates: no logging yet
+# CA2000: passing a disposable to a constructor (e.g. new HttpClient(handler)) hands over ownership.
+dotnet_code_quality.dispose_ownership_transfer_at_constructor = true
+
+#### Meziantou overrides (duplicates of CA rules we already enforce) ####
+dotnet_diagnostic.MA0001.severity = none       # StringComparison missing -> CA1307/CA1309/CA1310
+dotnet_diagnostic.MA0004.severity = none       # ConfigureAwait(false) -> CA2007
+dotnet_diagnostic.MA0006.severity = none       # Use string.Equals instead of == (style preference)
+dotnet_diagnostic.MA0011.severity = none       # IFormatProvider missing -> CA1305
+
+#### Per-project overrides ####
+
+# The CLI is an application: no SynchronizationContext, and its types are not a public API.
+[src/SolisCloud.Cli/**.cs]
+dotnet_diagnostic.CA2007.severity = none       # ConfigureAwait(false) is pointless in a console app
+
+# Tests follow xUnit conventions rather than library conventions.
+[tests/**.cs]
+dotnet_diagnostic.CA1515.severity = none       # xUnit requires public test classes
+dotnet_diagnostic.CA1707.severity = none       # Underscores in test method names are conventional
+dotnet_diagnostic.CA2007.severity = none       # xUnit forbids ConfigureAwait(false) in tests (xUnit1030)
+dotnet_diagnostic.CA1062.severity = none       # Test methods receive arguments from the framework
+dotnet_diagnostic.CA1861.severity = none       # Constant arrays as arguments are fine in tests
+dotnet_diagnostic.CA5350.severity = none       # Tests compute reference HMAC-SHA1 values
+dotnet_diagnostic.CA5351.severity = none       # Tests compute reference MD5 values
+dotnet_diagnostic.MA0051.severity = none       # Long test methods are acceptable
