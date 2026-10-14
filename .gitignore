@@ -1,0 +1,25 @@
+# Build output
+bin/
+obj/
+artifacts/
+TestResults/
+*.binlog
+
+# IDE / tooling
+.vs/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.user
+*.suo
+*.DotSettings.user
+
+# Local secrets and captured data — never commit real credentials or unsanitised responses
+*.local.json
+.env
+.env.*
+captures/
+
+# OS
+Thumbs.db
+.DS_Store

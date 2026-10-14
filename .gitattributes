@@ -1,0 +1,12 @@
+# Normalise all text to LF in the repository and working tree, on every OS.
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF so older PowerShell / cmd behave.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Binary
+*.png binary
+*.jpg binary
+*.pdf binary
+*.snk binary
