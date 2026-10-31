@@ -55,7 +55,7 @@ The first real capture came from a single-phase hybrid system on 2026-10-14: a S
 ### Shapes
 - **Confirmed: paged lists put records in `data.page.records`** (`userStationList`, `inverterList`, `collectorList`, `epmList`, `weatherList`, `ammeterList`), **or in `data.records`** (`inverterDetailList`, `alarmList`).
 - **Confirmed: history operations return arrays.** Day series have one point per 5 minutes: 194 points by 16:10. Monthly arrays have one record per day so far, annual arrays one per month, and lifetime arrays one per year.
-- **Confirmed: numbered fields** `uPv1…uPv32`, `iPv1…iPv32` and `pow1…pow32` are all present, with zeros for unused strings. Inverter day series have 129 fields per point.
+- **Confirmed: numbered fields** `uPv1…uPv32`, `iPv1…iPv32` and `pow1…pow32` are all present in inverter details, with zeros for unused strings. Inverter day series have 129 fields per point but **no `powN`**: only `uPvN` and `iPvN`, so the client works out each string's DC power as their product (in details, `pow1: 7` for `uPv1: 74.9`, `iPv1: 0.1` shows the inverter does the same, rounded).
 - **Confirmed: some string fields hold JSON**, e.g. station detail's `extraInfo` (inverter model, serial numbers, export settings).
 - **Confirmed:** history operations require `money` (currency code) and `timeZone` (hours; `2` and `2.0` are accepted).
 - **Confirmed: inverter details spell the input count `dcInputtype`** (lower-case t), where the inverter list has `dcInputType`. The number of DC inputs is the value plus one.

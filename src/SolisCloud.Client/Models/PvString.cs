@@ -24,6 +24,9 @@ public sealed class PvString
     /// <summary>Gets the current in amperes.</summary>
     public double? Current { get; }
 
-    /// <summary>Gets the power.</summary>
+    /// <summary>
+    /// Gets the power: as the inverter reported it, or <see cref="Voltage"/> × <see cref="Current"/> where the record
+    /// doesn't include it (the day series, <see cref="InverterSample"/>, never does).
+    /// </summary>
     public Power? Power { get; }
 }

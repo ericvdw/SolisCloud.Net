@@ -13,7 +13,8 @@ internal static class Readings
     private const int MaximumPvStrings = 32;
 
     /// <summary>
-    /// Returns the inverter's DC inputs. The count comes from <c>dcInputType</c> (number of inputs minus one; the
+    /// Returns the inverter's DC inputs, with each input's power as reported (<c>powN</c>) or, where the record has
+    /// none, worked out from its voltage and current. The count comes from <c>dcInputType</c> (number of inputs minus one; the
     /// details spell it <c>dcInputtype</c>). Without it, inputs are kept up to the last one reporting anything.
     /// </summary>
     public static IReadOnlyList<PvString> PvStrings(FieldReader f)
@@ -25,7 +26,13 @@ internal static class Readings
         for (int i = 1; i <= count; i++)
         {
             string n = i.ToString(CultureInfo.InvariantCulture);
-            strings.Add(new PvString(i, f.Number("uPv" + n), f.Number("iPv" + n), f.Power("pow" + n, "W")));
+            double? voltage = f.Number("uPv" + n);
+            double? current = f.Number("iPv" + n);
+
+            // The day series (inverterDay) has no powN fields, only voltage and current: DC power is their product.
+            Power? power = f.Power("pow" + n, "W")
+                ?? (voltage is double v && current is double c ? Power.FromWatts(v * c) : null);
+            strings.Add(new PvString(i, voltage, current, power));
         }
 
         return strings;
