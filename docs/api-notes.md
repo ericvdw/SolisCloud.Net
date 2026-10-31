@@ -37,6 +37,7 @@ The first real capture came from a single-phase hybrid system on 2026-10-14: a S
   - `energy: 4770.9`, `energyPec: "0.001"`, `energyStr: "MWh"` is 4.7709 MWh.
 
   Read without the factor, these look like wrong units. The library always applies it, and treats a missing factor as 1.
+- **Confirmed: a unit can change between records of one series.** In the inverter day series `pacStr` is `"kW"` with `pacPec: "0.001"`, but on the inverter's first day 57 points came as `"W"` with `pacPec: "1"`. Read each record's own unit fields.
 - **Confirmed: values without a unit field** in history data (`batteryPower`, `psum`, `consumeEnergy` in day series) are in watts, and energy totals are in kWh.
 - **Confirmed: `*Zheng` / `*Fu` fields** (pinyin for positive/negative) split a signed value into two non-negative magnitudes, in **watts** and with no unit field. For example `batteryPower: -1.364` (kW) appears as `batteryPowerZheng: 0`, `batteryPowerFu: 1364.0`.
 
@@ -46,6 +47,15 @@ The first real capture came from a single-phase hybrid system on 2026-10-14: a S
 - **Confirmed: `pac` on a hybrid inverter tracks PV generation**, not the AC output to the house.
 - **Confirmed: in the station day series, `familyLoadPower` is usually 0.** The load is in `consumeEnergy` (a power in W, despite the name), which equals `power - psum - batteryPower` exactly at every point.
 - **Confirmed: in the inverter day series, the load is split** into the grid-side load (`familyLoadPower`) and the backup-port load (`bypassLoadPower`). Their sum matches `pac - pSum - batteryPower` to within conversion losses. Note the capital S in `pSum` here, where every other response uses `psum`.
+  - Ten months of data confirm which is which. `familyLoadPower` is 0 most of the time and about 3.9 kW while a grid-side geyser runs; during a three-day grid outage it stayed at 0 (the geyser had no power) while `bypassLoadPower` carried on.
+  - **`familyLoadPower` means something else in details.** Inverter details report it equal to `totalLoadPower`; station details report 0. The library takes the grid-side load in details as `totalLoadPower - bypassLoadPower` instead.
+- **Confirmed: `psum` briefly shows export on a zero-export system**, up to about 240 W for one 5-minute point (46 points in ten months), when the load changes sharply. It's the meter catching up, not real export.
+
+### Daily and monthly totals
+- **Confirmed: `consumeEnergy` in monthly, annual and lifetime records is calculated, not measured.** It equals `energy + gridPurchasedEnergy - gridSellEnergy - batteryChargeEnergy + batteryDischargeEnergy` exactly, so inverter losses count as consumption: about 1.8 kWh a day (a tenth of generation) on the system checked. `homeLoadEnergy` repeats it. The inverter's own `homeLoadTodayEnergy` in the day series is measured and lower.
+- **Confirmed: `backUpEnergy` is the measured backup-port load.** `homeGridEnergy` is what is left, `consumeEnergy - backUpEnergy`: the grid-side load plus the losses.
+- **Confirmed: battery charge and discharge totals in monthly records are whole kWh** (`9.0`, `10.0`), while the other totals have decimals. The inverter day series' `batteryTodayChargeEnergy` has a decimal.
+- **Confirmed: SolisCloud's own totals can be wrong.** For one system, the annual record for August 2026 and the monthly record for 31 August are all zeros, though the inverter's 5-minute data for those days is normal; re-fetching weeks later gives the same zeros. Where totals matter, check them against the day series.
 
 ### Timestamps and time zones
 - **Confirmed: `dataTimestamp` in details and day series is a real epoch in milliseconds** (a string). `1791986812838` matches `dataTimestampStr: "2026-10-14 16:06:52 (UTC+02:00)"`. The document's "under UTC+8" note is wrong for these fields.
@@ -61,7 +71,7 @@ The first real capture came from a single-phase hybrid system on 2026-10-14: a S
 - **Confirmed: inverter details spell the input count `dcInputtype`** (lower-case t), where the inverter list has `dcInputType`. The number of DC inputs is the value plus one.
 
 ### Still to verify
-- What the API returns when the rate limit is exceeded.
+- What the API returns when the rate limit is exceeded, and for a wrong secret, an unknown ID or a malformed date.
 - How far back 5-minute day data is kept (needed for backfilling history).
 - Three-phase, grid-tie-only, multi-inverter, EPM and meter systems.
 

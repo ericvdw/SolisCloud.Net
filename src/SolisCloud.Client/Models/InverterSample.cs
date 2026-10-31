@@ -27,7 +27,11 @@ public sealed class InverterSample
         BatteryPower = f.Power("batteryPower", "W");
         BatteryStateOfCharge = f.Number("batteryCapacitySoc");
         GridPower = f.Power("pSum", "W") ?? f.Power("psum", "W");
-        LoadPower = Sum(f.Power("familyLoadPower", "W"), f.Power("bypassLoadPower", "W"));
+        // In the day series, familyLoadPower is the load on the inverter's grid side (not backed up) and
+        // bypassLoadPower the load on its backup port. Inverter details use familyLoadPower differently.
+        NonBackupLoadPower = f.Power("familyLoadPower", "W");
+        BackupLoadPower = f.Power("bypassLoadPower", "W");
+        LoadPower = Sum(NonBackupLoadPower, BackupLoadPower);
         Temperature = f.Number("inverterTemperature");
         PvStrings = Readings.PvStrings(f);
 
@@ -54,10 +58,21 @@ public sealed class InverterSample
     public Power? GridPower { get; }
 
     /// <summary>
-    /// Gets the household consumption: the grid-side load (<c>familyLoadPower</c>) plus the backup-port load
-    /// (<c>bypassLoadPower</c>). Either may be zero depending on how the house is wired.
+    /// Gets the household consumption: <see cref="BackupLoadPower"/> plus <see cref="NonBackupLoadPower"/>.
     /// </summary>
     public Power? LoadPower { get; }
+
+    /// <summary>
+    /// Gets the load on the inverter's backup (essential) port, which stays powered in a grid outage
+    /// (<c>bypassLoadPower</c>).
+    /// </summary>
+    public Power? BackupLoadPower { get; }
+
+    /// <summary>
+    /// Gets the load on the grid side of the inverter, which goes dark in a grid outage (<c>familyLoadPower</c>).
+    /// Zero when nothing is wired there, or when the inverter can't measure it (no meter or CT).
+    /// </summary>
+    public Power? NonBackupLoadPower { get; }
 
     /// <summary>Gets the inverter temperature in °C.</summary>
     public double? Temperature { get; }

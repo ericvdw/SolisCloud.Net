@@ -54,6 +54,13 @@ public sealed class Inverter
         GridPower = f.Power("psum", "kW");
         LoadPower = f.Power("totalLoadPower", "kW");
 
+        // bypassLoadPower is the backup port. The rest of the load is on the grid side; familyLoadPower isn't
+        // used for it, because details report it inconsistently (0, or equal to the total).
+        BackupLoadPower = f.Power("bypassLoadPower", "kW");
+        NonBackupLoadPower = LoadPower is Power total && BackupLoadPower is Power backup
+            ? (total > backup ? total - backup : Power.Zero)
+            : null;
+
         EnergyToday = f.Energy("eToday", "etoday", "kWh");
         EnergyThisMonth = f.Energy("eMonth", "kWh");
         EnergyThisYear = f.Energy("eYear", "kWh");
@@ -61,6 +68,7 @@ public sealed class Inverter
         GridImportedToday = f.Energy("gridPurchasedTodayEnergy", "kWh");
         GridExportedToday = f.Energy("gridSellTodayEnergy", "kWh");
         LoadToday = f.Energy("homeLoadTodayEnergy", "kWh");
+        BackupLoadToday = f.Energy("backupTodayEnergy", "kWh");
         BatteryChargedToday = f.Energy("batteryTodayChargeEnergy", "kWh");
         BatteryDischargedToday = f.Energy("batteryTodayDischargeEnergy", "kWh");
     }
@@ -128,6 +136,17 @@ public sealed class Inverter
     /// <summary>Gets the household consumption.</summary>
     public Power? LoadPower { get; }
 
+    /// <summary>
+    /// Gets the load on the inverter's backup (essential) port, which stays powered in a grid outage.
+    /// </summary>
+    public Power? BackupLoadPower { get; }
+
+    /// <summary>
+    /// Gets the load on the grid side of the inverter, which goes dark in a grid outage:
+    /// <see cref="LoadPower"/> minus <see cref="BackupLoadPower"/>.
+    /// </summary>
+    public Power? NonBackupLoadPower { get; }
+
     /// <summary>Gets today's generation.</summary>
     public Energy? EnergyToday { get; }
 
@@ -148,6 +167,9 @@ public sealed class Inverter
 
     /// <summary>Gets today's household consumption.</summary>
     public Energy? LoadToday { get; }
+
+    /// <summary>Gets today's consumption on the inverter's backup (essential) port.</summary>
+    public Energy? BackupLoadToday { get; }
 
     /// <summary>Gets the energy put into the battery today.</summary>
     public Energy? BatteryChargedToday { get; }

@@ -45,6 +45,14 @@ public sealed class Station
         GridPower = f.Power("psum", "kW");
         LoadPower = f.Power("totalLoadPower", "kW");
 
+        // bypassLoadPower is the backup port. The rest of the load is on the grid side; familyLoadPower isn't
+        // used for it, because details report it inconsistently (0, or equal to the total).
+        BackupLoadPower = f.Power("bypassLoadPower", "kW");
+        // ("Models." because Power is also a property here.)
+        NonBackupLoadPower = LoadPower is Models.Power total && BackupLoadPower is Models.Power backup
+            ? (total > backup ? total - backup : Models.Power.Zero)
+            : null;
+
         EnergyToday = f.Energy("dayEnergy", "kWh");
         EnergyThisMonth = f.Energy("monthEnergy", "kWh");
         EnergyThisYear = f.Energy("yearEnergy", "kWh");
@@ -52,6 +60,7 @@ public sealed class Station
         GridImportedToday = f.Energy("gridPurchasedDayEnergy", "kWh");
         GridExportedToday = f.Energy("gridSellDayEnergy", "kWh");
         LoadToday = f.Energy("homeLoadTodayEnergy", "kWh");
+        BackupLoadToday = f.Energy("backupTodayEnergy", "kWh");
         BatteryChargedToday = f.Energy("batteryChargeEnergy", "batteryTodayChargeEnergy", "kWh");
         BatteryDischargedToday = f.Energy("batteryDischargeEnergy", "batteryTodayDischargeEnergy", "kWh");
     }
@@ -98,6 +107,17 @@ public sealed class Station
     /// <summary>Gets the household consumption (details only).</summary>
     public Power? LoadPower { get; }
 
+    /// <summary>
+    /// Gets the load on the inverter's backup (essential) port, which stays powered in a grid outage.
+    /// </summary>
+    public Power? BackupLoadPower { get; }
+
+    /// <summary>
+    /// Gets the load on the grid side of the inverter, which goes dark in a grid outage:
+    /// <see cref="LoadPower"/> minus <see cref="BackupLoadPower"/>.
+    /// </summary>
+    public Power? NonBackupLoadPower { get; }
+
     /// <summary>Gets today's generation.</summary>
     public Energy? EnergyToday { get; }
 
@@ -118,6 +138,9 @@ public sealed class Station
 
     /// <summary>Gets today's household consumption.</summary>
     public Energy? LoadToday { get; }
+
+    /// <summary>Gets today's consumption on the inverter's backup (essential) port.</summary>
+    public Energy? BackupLoadToday { get; }
 
     /// <summary>Gets the energy put into the battery today.</summary>
     public Energy? BatteryChargedToday { get; }

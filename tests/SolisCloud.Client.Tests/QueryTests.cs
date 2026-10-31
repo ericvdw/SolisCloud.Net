@@ -182,6 +182,44 @@ public sealed class QueryTests
     }
 
     [Fact]
+    public async Task Load_splits_into_backup_and_grid_side()
+    {
+        using FixtureClient fixture = new();
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+
+        // Details: everything was on the backup port at capture time ("totalLoadPower" = "bypassLoadPower" = 0.44 kW).
+        // The inverter's own "familyLoadPower" says 0.44 too and the station's says 0, so neither is used.
+        Station station = await fixture.Client.GetStationAsync(StationId, cancellationToken);
+        Inverter inverter = await fixture.Client.GetInverterAsync(InverterSn, cancellationToken);
+        foreach ((Power? backup, Power? nonBackup, Energy? backupToday) in new[]
+        {
+            (station.BackupLoadPower, station.NonBackupLoadPower, station.BackupLoadToday),
+            (inverter.BackupLoadPower, inverter.NonBackupLoadPower, inverter.BackupLoadToday),
+        })
+        {
+            Assert.Equal(440, backup!.Value.Watts, precision: 6);
+            Assert.Equal(0, nonBackup!.Value.Watts, precision: 6);
+            Assert.Equal(12.3, backupToday!.Value.KilowattHours, precision: 9);
+        }
+
+        // Day series: "familyLoadPower": 97 (grid side) and "bypassLoadPower": 1070 (backup port) at 09:31.
+        IReadOnlyList<InverterSample> samples = await fixture.Client.GetInverterDayAsync(InverterSn, CaptureDay, SouthAfrica, cancellationToken);
+        InverterSample sample = samples[114];
+        Assert.Equal(97, sample.NonBackupLoadPower!.Value.Watts, precision: 6);
+        Assert.Equal(1070, sample.BackupLoadPower!.Value.Watts, precision: 6);
+        Assert.Equal(1167, sample.LoadPower!.Value.Watts, precision: 6);
+
+        // SolisCloud's consumption is a balance, not a measurement: 23.2 + 0.42 - 0 - 10 + 8 = 21.62.
+        IReadOnlyList<EnergyRecord> days = await fixture.Client.GetStationMonthAsync(StationId, 2026, 10, SouthAfrica, cancellationToken);
+        EnergyRecord today = days[days.Count - 1];
+        double balance = today.Produced!.Value.KilowattHours + today.GridImported!.Value.KilowattHours
+            - today.GridExported!.Value.KilowattHours - today.BatteryCharged!.Value.KilowattHours
+            + today.BatteryDischarged!.Value.KilowattHours;
+        Assert.Equal(balance, today.Consumed!.Value.KilowattHours, precision: 9);
+        Assert.Equal(12.3, today.BackupLoad!.Value.KilowattHours, precision: 9);
+    }
+
+    [Fact]
     public async Task Month_must_be_valid()
     {
         using FixtureClient fixture = new();
