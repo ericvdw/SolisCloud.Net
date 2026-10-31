@@ -14,6 +14,8 @@ public sealed class FieldReaderTests
     [InlineData("{\"pac\":1154,\"pacPec\":\"0.001\",\"pacStr\":\"kW\"}", 1154)]
     [InlineData("{\"pac\":\"2.5\",\"pacStr\":\"MW\"}", 2_500_000)]
     [InlineData("{\"pac\":5.6,\"pacStr\":\"kWp\"}", 5600)]
+    // The unit can change between records of one series: on its first day this inverter reported "W" and a scale of 1.
+    [InlineData("{\"pac\":57,\"pacPec\":\"1\",\"pacStr\":\"W\"}", 57)]
     public void Power_applies_the_unit_and_scale(string json, double expectedWatts)
     {
         Power? power = Read(json).Power("pac", "W");

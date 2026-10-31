@@ -290,3 +290,12 @@ static SolisCloud.SolisRequestSigner.ComputeSignature(string! apiSecret, string!
 static SolisCloud.SolisRequestSigner.FormatAuthorization(string! apiId, string! signature) -> string!
 static SolisCloud.SolisRequestSigner.FormatDate(System.DateTimeOffset timestamp) -> string!
 const SolisCloud.SolisRequestSigner.ContentType = "application/json" -> string!
+SolisCloud.Models.EnergyRecord.BackupLoad.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Inverter.BackupLoadPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Inverter.BackupLoadToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Inverter.NonBackupLoadPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.InverterSample.BackupLoadPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.InverterSample.NonBackupLoadPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Station.BackupLoadPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.Station.BackupLoadToday.get -> SolisCloud.Models.Energy?
+SolisCloud.Models.Station.NonBackupLoadPower.get -> SolisCloud.Models.Power?

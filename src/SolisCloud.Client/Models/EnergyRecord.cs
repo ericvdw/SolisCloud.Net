@@ -30,6 +30,7 @@ public sealed class EnergyRecord
 
         Produced = f.Energy("energy", "kWh");
         Consumed = f.Energy("consumeEnergy", "kWh");
+        BackupLoad = f.Energy("backUpEnergy", "kWh");
         GridImported = f.Energy("gridPurchasedEnergy", "kWh");
         GridExported = f.Energy("gridSellEnergy", "kWh");
         BatteryCharged = f.Energy("batteryChargeEnergy", "kWh");
@@ -46,8 +47,19 @@ public sealed class EnergyRecord
     /// <summary>Gets the energy generated.</summary>
     public Energy? Produced { get; }
 
-    /// <summary>Gets the energy the household consumed.</summary>
+    /// <summary>Gets the energy the household consumed, as SolisCloud calculates it.</summary>
+    /// <remarks>
+    /// Not a measurement: SolisCloud works it out as <see cref="Produced"/> + <see cref="GridImported"/> -
+    /// <see cref="GridExported"/> - <see cref="BatteryCharged"/> + <see cref="BatteryDischarged"/>, so the
+    /// inverter's own losses count as consumption (about a tenth of generation on the hybrid system this was checked against).
+    /// </remarks>
     public Energy? Consumed { get; }
+
+    /// <summary>
+    /// Gets the energy used on the inverter's backup (essential) port (<c>backUpEnergy</c>), which the inverter
+    /// measures. The rest of <see cref="Consumed"/> is the grid-side load plus the losses.
+    /// </summary>
+    public Energy? BackupLoad { get; }
 
     /// <summary>Gets the energy bought from the grid.</summary>
     public Energy? GridImported { get; }
