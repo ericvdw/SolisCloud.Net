@@ -124,6 +124,11 @@ public sealed class QueryTests
         Assert.Equal(23.2, last.EnergyToday!.Value.KilowattHours, precision: 9);
         Assert.Equal(2, last.PvStrings.Count);
 
+        // The day series has no "pow1": DC power is worked out from "uPv1": 192.1 and "iPv1": 4.6.
+        InverterSample morning = samples[110];
+        Assert.Equal(192.1 * 4.6, morning.PvStrings[0].Power!.Value.Watts, precision: 6);
+        Assert.Equal(0, morning.PvStrings[1].Power!.Value.Watts, precision: 6);
+
         Assert.Equal(
             "{\"sn\":\"" + InverterSn + "\",\"money\":\"ZAR\",\"time\":\"2026-10-14\",\"timeZone\":2}",
             fixture.Handler.Requests[0].Body);
