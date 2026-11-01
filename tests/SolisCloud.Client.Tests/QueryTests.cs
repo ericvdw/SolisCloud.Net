@@ -254,6 +254,80 @@ public sealed class QueryTests
     }
 
     [Fact]
+    public async Task Data_loggers_with_their_signal()
+    {
+        using FixtureClient fixture = new();
+
+        List<DataLogger> loggers = await fixture.Client.GetDataLoggersAsync(TestContext.Current.CancellationToken).CollectAsync();
+
+        DataLogger logger = Assert.Single(loggers);
+        Assert.Equal("2Z27895689H95440", logger.SerialNumber);
+        Assert.Equal(StationId, logger.StationId);
+        Assert.Equal("WL", logger.Model);
+        Assert.Equal(DeviceState.Online, logger.State);
+        Assert.Equal(-82, logger.SignalStrength);
+        Assert.Equal(1, logger.SignalLevel);
+        Assert.Equal(TimeSpan.FromMinutes(5), logger.UploadInterval);
+        Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1791994613154), logger.LastUpdated);
+    }
+
+    [Fact]
+    public async Task Data_logger_day_in_local_time()
+    {
+        using FixtureClient fixture = new();
+
+        IReadOnlyList<DataLoggerSample> samples = await fixture.Client.GetDataLoggerDayAsync(
+            "2Z27895689H95440", CaptureDay, SouthAfrica, TestContext.Current.CancellationToken);
+
+        Assert.Equal(220, samples.Count);
+
+        // "timeStr" is "06:01:40" here, in China time (UTC+8); "dataTimestamp" gives the true time.
+        Assert.Equal(new DateTimeOffset(2026, 10, 14, 0, 1, 40, SouthAfrica), TruncateMilliseconds(samples[0].Time));
+        Assert.Equal(-52, samples[0].SignalStrength);
+        Assert.Equal(4, samples[0].SignalLevel);
+        Assert.Equal(
+            "{\"sn\":\"2Z27895689H95440\",\"time\":\"2026-10-14\",\"timeZone\":2}",
+            fixture.Handler.Requests[0].Body);
+    }
+
+    [Fact]
+    public async Task An_unknown_station_is_not_found()
+    {
+        using FixtureClient fixture = new();
+
+        // What SolisCloud really returns for an ID it doesn't know.
+        fixture.Handler.Respond(SolisEndpoints.StationDetail, StubHttpMessageHandler.SuccessBody("null"));
+
+        SolisCloudNotFoundException exception = await Assert.ThrowsAsync<SolisCloudNotFoundException>(
+            () => fixture.Client.GetStationAsync("1", TestContext.Current.CancellationToken));
+        Assert.Equal("1", exception.Id);
+        Assert.Equal(SolisEndpoints.StationDetail.Path, exception.EndpointPath);
+    }
+
+    [Fact]
+    public async Task An_unknown_inverter_is_not_found()
+    {
+        using FixtureClient fixture = new();
+        fixture.Handler.Respond(SolisEndpoints.InverterDetail, StubHttpMessageHandler.SuccessBody("{}"));
+
+        _ = await Assert.ThrowsAsync<SolisCloudNotFoundException>(
+            () => fixture.Client.GetInverterAsync("0000000000000000", TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public async Task A_day_with_no_data_is_empty()
+    {
+        using FixtureClient fixture = new();
+
+        // A future date, a date before installation and an impossible date all come back as "data": null.
+        fixture.Handler.Respond(SolisEndpoints.StationDay, StubHttpMessageHandler.SuccessBody("null"));
+
+        IReadOnlyList<StationSample> points = await fixture.Client.GetStationDayAsync(
+            StationId, new DateTime(2027, 1, 1), SouthAfrica, TestContext.Current.CancellationToken);
+        Assert.Empty(points);
+    }
+
+    [Fact]
     public async Task Paging_continues_until_a_short_page()
     {
         using FixtureClient fixture = new();

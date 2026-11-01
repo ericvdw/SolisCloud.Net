@@ -70,9 +70,30 @@ The first real capture came from a single-phase hybrid system on 2026-10-14: a S
 - **Confirmed:** history operations require `money` (currency code) and `timeZone` (hours; `2` and `2.0` are accepted).
 - **Confirmed: inverter details spell the input count `dcInputtype`** (lower-case t), where the inverter list has `dcInputType`. The number of DC inputs is the value plus one.
 
+### Errors and edge cases (probed against a live account)
+SolisCloud rarely reports a bad request as an error. What it does instead:
+
+| Request | Answer |
+| --- | --- |
+| Wrong API secret | HTTP **403**, not the documented code `R0000` |
+| Unknown station ID (`stationDetail`) | success, `data: null`; the client raises `SolisCloudNotFoundException` |
+| Unknown inverter serial number (`inverterDetail`) | success, with an object that isn't an inverter; the client raises `SolisCloudNotFoundException` when it has no serial number |
+| Day series for a future date, a date before installation, or an impossible date (`2026-13-40`) | success, `data: null` (the client returns an empty list) |
+| A date not written `yyyy-MM-dd` (`20261030`) | code **`1`**, "Communication error. Please refresh and try again later." |
+| `money` or `timeZone` left out of a history request | success; the server fills in defaults |
+| `timeZone: 5.5`, or a month written `2026-1` | accepted |
+| `pageSize: 1000`, or a page past the end | success |
+| 8 requests to one operation at once | all succeed: the documented limit of 2 a second wasn't enforced. The client keeps to it anyway. |
+
+- **Confirmed: 5-minute day data goes back at least to installation** (ten months for the account checked, including its partial first day), so history can be backfilled.
+
+### Data loggers
+- **Confirmed: when a data logger loses its connection, SolisCloud raises a "Loss of internet connection" alarm (code `1D4C2`)** for exactly the gap, and its day series (`collector/day`) has no points then.
+- **Confirmed: during such a gap the inverter day series may still have points, all with the same values** and grid voltage and frequency near 0. They are placeholders, not readings: don't read them as a grid outage. A "NO-Grid" alarm (`1015`) is the reliable sign of a real outage.
+- **Confirmed: the data logger day series' `timeStr` is China time (UTC+8)**, unlike the inverter day series, whose `timeStr` is local. Use `dataTimestamp`.
+- **Confirmed: `rssi` is the signal in dBm and `rssiLevel` rates it 1 (weak) to 4 (strong):** about -52 dBm is 4, -82 dBm is 1. On the account checked, signal dropped from about -53 to -82 dBm hours before a disconnection.
+
 ### Still to verify
-- What the API returns when the rate limit is exceeded, and for a wrong secret, an unknown ID or a malformed date.
-- How far back 5-minute day data is kept (needed for backfilling history).
 - Three-phase, grid-tie-only, multi-inverter, EPM and meter systems.
 
 ## Write operations

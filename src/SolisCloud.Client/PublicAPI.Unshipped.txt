@@ -299,3 +299,28 @@ SolisCloud.Models.InverterSample.NonBackupLoadPower.get -> SolisCloud.Models.Pow
 SolisCloud.Models.Station.BackupLoadPower.get -> SolisCloud.Models.Power?
 SolisCloud.Models.Station.BackupLoadToday.get -> SolisCloud.Models.Energy?
 SolisCloud.Models.Station.NonBackupLoadPower.get -> SolisCloud.Models.Power?
+SolisCloud.Models.DataLogger
+SolisCloud.Models.DataLogger.Id.get -> string!
+SolisCloud.Models.DataLogger.LastUpdated.get -> System.DateTimeOffset?
+SolisCloud.Models.DataLogger.Model.get -> string?
+SolisCloud.Models.DataLogger.Raw.get -> System.Text.Json.JsonElement
+SolisCloud.Models.DataLogger.SerialNumber.get -> string!
+SolisCloud.Models.DataLogger.SignalLevel.get -> int?
+SolisCloud.Models.DataLogger.SignalStrength.get -> double?
+SolisCloud.Models.DataLogger.State.get -> SolisCloud.Models.DeviceState
+SolisCloud.Models.DataLogger.StationId.get -> string?
+SolisCloud.Models.DataLogger.UploadInterval.get -> System.TimeSpan?
+SolisCloud.Models.DataLoggerSample
+SolisCloud.Models.DataLoggerSample.Raw.get -> System.Text.Json.JsonElement
+SolisCloud.Models.DataLoggerSample.SignalLevel.get -> int?
+SolisCloud.Models.DataLoggerSample.SignalStrength.get -> double?
+SolisCloud.Models.DataLoggerSample.Time.get -> System.DateTimeOffset
+SolisCloud.SolisCloudClient.GetDataLoggerDayAsync(string! serialNumber, System.DateTime day, System.TimeSpan utcOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<SolisCloud.Models.DataLoggerSample!>!>!
+SolisCloud.SolisCloudClient.GetDataLoggersAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<SolisCloud.Models.DataLogger!>!
+SolisCloud.SolisCloudNotFoundException
+SolisCloud.SolisCloudNotFoundException.EndpointPath.get -> string?
+SolisCloud.SolisCloudNotFoundException.Id.get -> string?
+SolisCloud.SolisCloudNotFoundException.SolisCloudNotFoundException() -> void
+SolisCloud.SolisCloudNotFoundException.SolisCloudNotFoundException(string! endpointPath, string! id) -> void
+SolisCloud.SolisCloudNotFoundException.SolisCloudNotFoundException(string! message) -> void
+SolisCloud.SolisCloudNotFoundException.SolisCloudNotFoundException(string! message, System.Exception! innerException) -> void
