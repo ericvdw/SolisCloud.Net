@@ -71,7 +71,7 @@ Run it from the repository with `dotnet run --project src/SolisCloud.Cli --`, fo
 | Command | What it does |
 |---|---|
 | `whoami` | Checks the credentials and the computer's clock (requests fail beyond ±15 minutes) and lists the stations the account can see. |
-| `raw <operation> [--body <json>] [--envelope]` | Sends any operation, e.g. `raw inverterDetail --body '{"sn":"..."}'`, and prints the response. Operations that change account data also need `--allow-write`. |
+| `raw <operation> [--body <json> \| --body-file <path>] [--envelope]` | Sends any operation, e.g. `raw inverterDetail --body '{"sn":"..."}'`, and prints the response. Operations that change account data also need `--allow-write`. In Windows PowerShell write the inner quotes as `\"` (`'{\"sn\":\"...\"}'`), or use `--body-file`. |
 | `capture [--output <folder>] [--date yyyy-MM-dd] [--no-sanitize]` | Calls every read operation for everything the account can see and saves each request and response under `captures/<timestamp>/`. |
 
 ### Sharing captures

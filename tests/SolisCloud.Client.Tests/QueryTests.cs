@@ -308,7 +308,10 @@ public sealed class QueryTests
     public async Task An_unknown_inverter_is_not_found()
     {
         using FixtureClient fixture = new();
-        fixture.Handler.Respond(SolisEndpoints.InverterDetail, StubHttpMessageHandler.SuccessBody("{}"));
+        // An excerpt of what SolisCloud really returns for "0000000000000000": a placeholder record.
+        fixture.Handler.Respond(
+            SolisEndpoints.InverterDetail,
+            StubHttpMessageHandler.SuccessBody("{\"id\":\"1\",\"sn\":\"000000000000000\",\"state\":2,\"model\":\"\",\"version\":\"--\",\"dataTimestamp\":\"0\",\"timeStr\":\"1970-01-01 02:00:00\"}"));
 
         _ = await Assert.ThrowsAsync<SolisCloudNotFoundException>(
             () => fixture.Client.GetInverterAsync("0000000000000000", TestContext.Current.CancellationToken));

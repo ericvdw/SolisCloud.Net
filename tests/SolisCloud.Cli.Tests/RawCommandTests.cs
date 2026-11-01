@@ -59,6 +59,37 @@ public sealed class RawCommandTests
     }
 
     [Fact]
+    public async Task The_body_can_come_from_a_file()
+    {
+        using CliHarness harness = new();
+        string file = Path.GetTempFileName();
+        try
+        {
+            await File.WriteAllTextAsync(file, "{\"sn\":\"ABC\"}", TestContext.Current.CancellationToken);
+
+            string? body = await RawCommand.ReadBodyAsync(harness.Context, body: null, file, TestContext.Current.CancellationToken);
+
+            Assert.Equal("{\"sn\":\"ABC\"}", body);
+        }
+        finally
+        {
+            File.Delete(file);
+        }
+    }
+
+    [Fact]
+    public async Task Body_and_body_file_are_exclusive_and_default_to_empty()
+    {
+        using CliHarness harness = new();
+
+        Assert.Equal("{}", await RawCommand.ReadBodyAsync(harness.Context, body: null, bodyFile: null, TestContext.Current.CancellationToken));
+        Assert.Null(await RawCommand.ReadBodyAsync(harness.Context, "{}", "request.json", TestContext.Current.CancellationToken));
+        Assert.Null(await RawCommand.ReadBodyAsync(harness.Context, body: null, Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N")), TestContext.Current.CancellationToken));
+        Assert.Contains("not both", harness.Error.ToString(), StringComparison.Ordinal);
+        Assert.Contains("Couldn't read --body-file", harness.Error.ToString(), StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task Write_operations_need_allow_write()
     {
         using CliHarness harness = new();

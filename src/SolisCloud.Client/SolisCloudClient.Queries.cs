@@ -76,9 +76,12 @@ public sealed partial class SolisCloudClient
             new RequestBody().Add("sn", serialNumber).ToUtf8(),
             cancellationToken).ConfigureAwait(false);
 
-        // An unknown serial number is a success with a record that isn't for any inverter (no serial number).
+        // An unknown serial number is a success with a placeholder: another serial number (one digit short, all
+        // zeros), no model, and a data timestamp of 0.
         Inverter inverter = new(RequireObject(response.Data, SolisEndpoints.InverterDetail, serialNumber));
-        return inverter.SerialNumber.Length > 0 ? inverter : throw new SolisCloudNotFoundException(SolisEndpoints.InverterDetail.Path, serialNumber);
+        bool placeholder = !string.Equals(inverter.SerialNumber, serialNumber.Trim(), StringComparison.OrdinalIgnoreCase)
+            || (inverter.Model is null && inverter.LastUpdated is not DateTimeOffset { Year: > 1970 });
+        return placeholder ? throw new SolisCloudNotFoundException(SolisEndpoints.InverterDetail.Path, serialNumber) : inverter;
     }
 
     /// <summary>
