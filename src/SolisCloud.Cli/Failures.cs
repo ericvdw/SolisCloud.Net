@@ -43,6 +43,7 @@ internal static class Failures
             "R0000" => "The API ID or secret is wrong, or API access isn't enabled for this account.",
             "I0000" => "A required parameter is missing from the request body.",
             "B0049" => "The collector doesn't exist or isn't visible to this account.",
+            "1" => "SolisCloud couldn't read a value in the request, e.g. a date not written as yyyy-MM-dd.",
             _ => null,
         };
 
