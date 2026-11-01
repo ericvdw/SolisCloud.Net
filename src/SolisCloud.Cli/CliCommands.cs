@@ -40,8 +40,11 @@ internal static class CliCommands
         };
         Option<string> body = new("--body", "-b")
         {
-            Description = "The JSON request body.",
-            DefaultValueFactory = _ => "{}",
+            Description = "The JSON request body. Defaults to {}.",
+        };
+        Option<string> bodyFile = new("--body-file")
+        {
+            Description = "A file holding the JSON request body, instead of --body (avoids shell quoting).",
         };
         Option<bool> envelope = new("--envelope")
         {
@@ -54,15 +57,21 @@ internal static class CliCommands
 
         Command command = new("raw", "Send any operation with a hand-written body and print the response.")
         {
-            operation, body, envelope, allowWrite,
+            operation, body, bodyFile, envelope, allowWrite,
         };
-        command.SetAction((parseResult, cancellationToken) => RawCommand.RunAsync(
-            context,
-            parseResult.GetValue(operation) ?? string.Empty,
-            parseResult.GetValue(body) ?? "{}",
-            parseResult.GetValue(envelope),
-            parseResult.GetValue(allowWrite),
-            cancellationToken));
+        command.SetAction(async (parseResult, cancellationToken) =>
+        {
+            string? text = await RawCommand.ReadBodyAsync(context, parseResult.GetValue(body), parseResult.GetValue(bodyFile), cancellationToken);
+            return text is null
+                ? ExitCodes.UsageError
+                : await RawCommand.RunAsync(
+                    context,
+                    parseResult.GetValue(operation) ?? string.Empty,
+                    text,
+                    parseResult.GetValue(envelope),
+                    parseResult.GetValue(allowWrite),
+                    cancellationToken);
+        });
         return command;
     }
 

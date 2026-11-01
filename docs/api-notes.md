@@ -77,7 +77,7 @@ SolisCloud rarely reports a bad request as an error. What it does instead:
 | --- | --- |
 | Wrong API secret | HTTP **403**, not the documented code `R0000` |
 | Unknown station ID (`stationDetail`) | success, `data: null`; the client raises `SolisCloudNotFoundException` |
-| Unknown inverter serial number (`inverterDetail`) | success, with an object that isn't an inverter; the client raises `SolisCloudNotFoundException` when it has no serial number |
+| Unknown inverter serial number (`inverterDetail`) | success, with a placeholder record: a different serial number (for `0000000000000000`, fifteen zeros), no model, `version: "--"`, `dataTimestamp: "0"`. The client raises `SolisCloudNotFoundException` |
 | Day series for a future date, a date before installation, or an impossible date (`2026-13-40`) | success, `data: null` (the client returns an empty list) |
 | A date not written `yyyy-MM-dd` (`20261030`) | code **`1`**, "Communication error. Please refresh and try again later." |
 | `money` or `timeZone` left out of a history request | success; the server fills in defaults |

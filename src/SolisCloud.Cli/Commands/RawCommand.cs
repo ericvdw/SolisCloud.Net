@@ -33,6 +33,8 @@ internal static class RawCommand
         if (!IsJsonObject(body))
         {
             await context.Error.WriteLineAsync("--body must be a JSON object, e.g. {\"sn\":\"ABC123\"}.");
+            await context.Error.WriteLineAsync(
+                "Windows PowerShell drops the inner double quotes: write them as \\\" ('{\\\"sn\\\":\\\"ABC123\\\"}'), or put the JSON in a file and use --body-file.");
             return ExitCodes.UsageError;
         }
 
@@ -63,6 +65,34 @@ internal static class RawCommand
         {
             await context.Error.WriteLineAsync(Failures.Describe(ex));
             return ExitCodes.ApiError;
+        }
+    }
+
+    /// <summary>
+    /// Works out the request body from <c>--body</c> or <c>--body-file</c>, reporting a problem to the user.
+    /// </summary>
+    /// <returns>The body, <c>{}</c> if neither was given, or <see langword="null"/> after writing an error.</returns>
+    public static async Task<string?> ReadBodyAsync(CliContext context, string? body, string? bodyFile, CancellationToken cancellationToken)
+    {
+        if (bodyFile is null)
+        {
+            return body ?? "{}";
+        }
+
+        if (body is not null)
+        {
+            await context.Error.WriteLineAsync("Use --body or --body-file, not both.");
+            return null;
+        }
+
+        try
+        {
+            return await File.ReadAllTextAsync(bodyFile, cancellationToken);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            await context.Error.WriteLineAsync("Couldn't read --body-file: " + ex.Message);
+            return null;
         }
     }
 
